@@ -48,37 +48,37 @@
 
         .status-bar {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            padding: 20px 30px;
             background: #f8f9fa;
             border-bottom: 1px solid #e0e0e0;
         }
 
         .status-card {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             text-align: center;
         }
 
         .status-card h3 {
-            font-size: 0.9em;
+            font-size: 0.75em;
             color: #666;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .status-card .value {
-            font-size: 2.5em;
+            font-size: 1.8em;
             font-weight: bold;
             color: #2c3e50;
         }
 
         .status-card .unit {
-            font-size: 1.2em;
+            font-size: 1em;
             color: #999;
             margin-left: 5px;
         }
@@ -166,7 +166,7 @@
             }
             
             .status-card .value {
-                font-size: 2em;
+                font-size: 1.5em;
             }
 
             #riverChart {
@@ -190,11 +190,11 @@
             </div>
             <div class="status-card">
                 <h3>Last Updated</h3>
-                <div class="value" id="lastUpdate" style="font-size: 1.2em;">--</div>
+                <div class="value" id="lastUpdate" style="font-size: 0.9em;">--</div>
             </div>
             <div class="status-card">
                 <h3>Status</h3>
-                <div class="value" id="status" style="font-size: 1.5em;">--</div>
+                <div class="value" id="status" style="font-size: 1.2em;">--</div>
             </div>
         </div>
 
@@ -311,6 +311,16 @@
             const now = new Date();
             const defaultStart = new Date(now.getTime() - (DEFAULT_DAYS * 24 * 60 * 60 * 1000));
 
+            // Calculate Y-axis range to include both data and flood stages
+            const minStage = Math.min(...stages);
+            const maxStage = Math.max(...stages);
+            const maxFloodStage = riverData.flood_stages.near_record;
+
+            // Set Y-axis max to whichever is higher: the max data value or the highest flood stage
+            // Add 10% padding on both ends for better visualization
+            const yMin = Math.max(0, minStage - (maxFloodStage - minStage) * 0.1);
+            const yMax = Math.max(maxStage, maxFloodStage) * 1.1;
+
             const trace = {
                 x: timestamps,
                 y: stages,
@@ -395,7 +405,9 @@
                 },
                 yaxis: {
                     title: 'River Stage (feet)',
-                    zeroline: false
+                    zeroline: false,
+                    range: [yMin, yMax],
+                    autorange: false
                 },
                 shapes: shapes,
                 hovermode: 'closest',

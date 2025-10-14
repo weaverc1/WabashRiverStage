@@ -296,6 +296,9 @@
         }
 
         function createChart() {
+            // Clear the loading message
+            document.getElementById('riverChart').innerHTML = '';
+
             const timestamps = riverData.readings.map(r => new Date(r.timestamp));
             const stages = riverData.readings.map(r => r.riverstage);
 

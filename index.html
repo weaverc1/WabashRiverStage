@@ -305,18 +305,17 @@
             const now = new Date();
             const defaultStart = new Date(now.getTime() - (DEFAULT_DAYS * 24 * 60 * 60 * 1000));
 
-            // Calculate Y-axis range for the default visible window (last 7 days)
+            // Calculate Y-axis range based only on actual stage data
             const visibleStages = riverData.readings
                 .filter(r => new Date(r.timestamp) >= defaultStart)
                 .map(r => r.riverstage);
 
             const minStage = Math.min(...visibleStages);
             const maxStage = Math.max(...visibleStages);
-            const maxFloodStage = riverData.flood_stages.near_record;
 
-            // Set Y-axis to include visible data and flood stages with padding
-            const yMin = Math.max(0, Math.min(minStage * 0.9, riverData.flood_stages.action * 0.9));
-            const yMax = Math.max(maxStage, maxFloodStage) * 1.05;
+            // Set Y-axis to scale to actual data with padding
+            const yMin = Math.max(0, minStage * 0.95);
+            const yMax = maxStage * 1.05;
 
             const trace = {
                 x: timestamps,
@@ -382,7 +381,7 @@
 
             const layout = {
                 title: {
-                    text: 'River Stage Over Time',
+                    text: 'Wabash River Stage',
                     font: { size: 20 }
                 },
                 xaxis: {

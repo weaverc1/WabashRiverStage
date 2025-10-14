@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wabash River at Hutsonville Bridge - River Stage Monitor</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .status-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .status-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .status-card h3 {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .status-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .status-card .unit {
+            font-size: 1.2em;
+            color: #999;
+            margin-left: 5px;
+        }
+
+        .status-card.warning .value {
+            color: #f39c12;
+        }
+
+        .status-card.danger .value {
+            color: #e74c3c;
+        }
+
+        .chart-container {
+            padding: 30px;
+        }
+
+        #riverChart {
+            width: 100%;
+            height: 600px;
+        }
+
+        .legend {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .legend h3 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .legend-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid;
+        }
+
+        .legend-item.action { border-left-color: #f1c40f; }
+        .legend-item.flood { border-left-color: #e67e22; }
+        .legend-item.moderate { border-left-color: #e74c3c; }
+        .legend-item.major { border-left-color: #c0392b; }
+        .legend-item.near-record { border-left-color: #8e44ad; }
+
+        .legend-item strong {
+            margin-right: 10px;
+            min-width: 140px;
+        }
+
+        footer {
+            padding: 20px 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .error {
+            text-align: center;
+            padding: 50px;
+            color: #e74c3c;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .status-card .value {
+                font-size: 2em;
+            }
+
+            #riverChart {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌊 Wabash River at Hutsonville Bridge</h1>
+            <p>Real-time River Stage Monitoring</p>
+        </header>
+
+        <div class="status-bar">
+            <div class="status-card" id="currentStageCard">
+                <h3>Current Stage</h3>
+                <div class="value" id="currentStage">--</div>
+                <span class="unit">ft</span>
+            </div>
+            <div class="status-card">
+                <h3>Last Updated</h3>
+                <div class="value" id="lastUpdate" style="font-size: 1.2em;">--</div>
+            </div>
+            <div class="status-card">
+                <h3>Status</h3>
+                <div class="value" id="status" style="font-size: 1.5em;">--</div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div id="riverChart" class="loading">Loading data...</div>
+        </div>
+
+        <div class="legend">
+            <h3>Flood Stage Reference</h3>
+            <div class="legend-items">
+                <div class="legend-item action">
+                    <strong>Action Stage:</strong> 12 ft
+                </div>
+                <div class="legend-item flood">
+                    <strong>Flood Stage:</strong> 16 ft
+                </div>
+                <div class="legend-item moderate">
+                    <strong>Moderate Flooding:</strong> 24 ft
+                </div>
+                <div class="legend-item major">
+                    <strong>Major Flooding:</strong> 28 ft
+                </div>
+                <div class="legend-item near-record">
+                    <strong>Near Record:</strong> 29 ft
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Data updates every 15 minutes | Monitored by weaverc1</p>
+            <p style="margin-top: 10px; font-size: 0.85em;">Flood stages are approximate reference values. For official information, consult the National Weather Service.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Configuration
+        const DATA_URL = 'data/river_data.json';
+        const DEFAULT_DAYS = 7;
+
+        // Global data store
+        let riverData = null;
+
+        // Fetch and display data
+        async function loadData() {
+            try {
+                const response = await fetch(DATA_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                riverData = await response.json();
+                displayData();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('riverChart').innerHTML = 
+                    '<div class="error">Error loading data. Please try again later.</div>';
+            }
+        }
+
+        function displayData() {
+            if (!riverData || !riverData.readings || riverData.readings.length === 0) {
+                document.getElementById('riverChart').innerHTML = 
+                    '<div class="error">No data available yet.</div>';
+                return;
+            }
+
+            updateCurrentStatus();
+            createChart();
+        }
+
+        function updateCurrentStatus() {
+            const latest = riverData.readings[riverData.readings.length - 1];
+            const currentStage = latest.riverstage;
+
+            document.getElementById('currentStage').textContent = currentStage.toFixed(2);
+
+            const updateTime = new Date(latest.timestamp);
+            document.getElementById('lastUpdate').textContent = 
+                updateTime.toLocaleString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+
+            const card = document.getElementById('currentStageCard');
+            const statusElement = document.getElementById('status');
+            
+            card.classList.remove('warning', 'danger');
+            
+            if (currentStage >= riverData.flood_stages.near_record) {
+                statusElement.textContent = '⚠️ Near Record';
+                card.classList.add('danger');
+            } else if (currentStage >= riverData.flood_stages.major) {
+                statusElement.textContent = '🚨 Major';
+                card.classList.add('danger');
+            } else if (currentStage >= riverData.flood_stages.moderate) {
+                statusElement.textContent = '⚠️ Moderate';
+                card.classList.add('danger');
+            } else if (currentStage >= riverData.flood_stages.flood) {
+                statusElement.textContent = '⚠️ Flooding';
+                card.classList.add('warning');
+            } else if (currentStage >= riverData.flood_stages.action) {
+                statusElement.textContent = '⚠️ Action';
+                card.classList.add('warning');
+            } else {
+                statusElement.textContent = '✓ Normal';
+            }
+        }
+
+        function createChart() {
+            const timestamps = riverData.readings.map(r => new Date(r.timestamp));
+            const stages = riverData.readings.map(r => r.riverstage);
+
+            const now = new Date();
+            const defaultStart = new Date(now.getTime() - (DEFAULT_DAYS * 24 * 60 * 60 * 1000));
+
+            const trace = {
+                x: timestamps,
+                y: stages,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'River Stage',
+                line: {
+                    color: '#3498db',
+                    width: 2
+                },
+                marker: {
+                    size: 4,
+                    color: '#2980b9'
+                },
+                hovertemplate: '<b>%{x|%Y-%m-%d %H:%M}</b><br>' +
+                               'Stage: %{y:.2f} ft<br>' +
+                               '<extra></extra>'
+            };
+
+            const shapes = [
+                {
+                    type: 'line',
+                    x0: timestamps[0],
+                    x1: timestamps[timestamps.length - 1],
+                    y0: riverData.flood_stages.action,
+                    y1: riverData.flood_stages.action,
+                    line: { color: '#f1c40f', width: 2, dash: 'dash' }
+                },
+                {
+                    type: 'line',
+                    x0: timestamps[0],
+                    x1: timestamps[timestamps.length - 1],
+                    y0: riverData.flood_stages.flood,
+                    y1: riverData.flood_stages.flood,
+                    line: { color: '#e67e22', width: 2, dash: 'dash' }
+                },
+                {
+                    type: 'line',
+                    x0: timestamps[0],
+                    x1: timestamps[timestamps.length - 1],
+                    y0: riverData.flood_stages.moderate,
+                    y1: riverData.flood_stages.moderate,
+                    line: { color: '#e74c3c', width: 2, dash: 'dash' }
+                },
+                {
+                    type: 'line',
+                    x0: timestamps[0],
+                    x1: timestamps[timestamps.length - 1],
+                    y0: riverData.flood_stages.major,
+                    y1: riverData.flood_stages.major,
+                    line: { color: '#c0392b', width: 2, dash: 'dash' }
+                },
+                {
+                    type: 'line',
+                    x0: timestamps[0],
+                    x1: timestamps[timestamps.length - 1],
+                    y0: riverData.flood_stages.near_record,
+                    y1: riverData.flood_stages.near_record,
+                    line: { color: '#8e44ad', width: 2, dash: 'dash' }
+                }
+            ];
+
+            const layout = {
+                title: {
+                    text: 'River Stage Over Time',
+                    font: { size: 20 }
+                },
+                xaxis: {
+                    title: 'Date/Time',
+                    type: 'date',
+                    range: [defaultStart, now],
+                    rangeslider: { visible: true },
+                    rangeselector: {
+                        buttons: [
+                            { count: 1, label: '24h', step: 'day', stepmode: 'backward' },
+                            { count: 3, label: '3d', step: 'day', stepmode: 'backward' },
+                            { count: 7, label: '7d', step: 'day', stepmode: 'backward' },
+                            { count: 1, label: '1m', step: 'month', stepmode: 'backward' },
+                            { step: 'all', label: 'All' }
+                        ]
+                    }
+                },
+                yaxis: {
+                    title: 'River Stage (feet)',
+                    zeroline: false
+                },
+                shapes: shapes,
+                hovermode: 'closest',
+                showlegend: true,
+                legend: {
+                    x: 0,
+                    y: 1,
+                    bgcolor: 'rgba(255, 255, 255, 0.8)'
+                },
+                margin: { l: 60, r: 40, t: 60, b: 60 }
+            };
+
+            const config = {
+                responsive: true,
+                displayModeBar: true,
+                displaylogo: false,
+                modeBarButtonsToRemove: ['lasso2d', 'select2d']
+            };
+
+            Plotly.newPlot('riverChart', [trace], layout, config);
+        }
+
+        function autoRefresh() {
+            loadData();
+            setTimeout(autoRefresh, 15 * 60 * 1000);
+        }
+
+        loadData();
+        setTimeout(autoRefresh, 15 * 60 * 1000);
+    </script>
+</body>
+</html>

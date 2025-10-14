@@ -1,0 +1,22 @@
+# Logs
+*.log
+update.log
+
+# Python
+__pycache__/
+*.py[cod]
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+
+# Local CSV (don't commit raw data)
+*.csv
+
+# Temporary files
+*.tmp
+*.bak

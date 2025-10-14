@@ -184,17 +184,8 @@
 
         <div class="status-bar">
             <div class="status-card" id="currentStageCard">
-                <h3>Current Stage</h3>
+                <h3>Current Stage (ft)</h3>
                 <div class="value" id="currentStage">--</div>
-                <span class="unit">ft</span>
-            </div>
-            <div class="status-card">
-                <h3>Last Updated</h3>
-                <div class="value" id="lastUpdate" style="font-size: 0.9em;">--</div>
-            </div>
-            <div class="status-card">
-                <h3>Status</h3>
-                <div class="value" id="status" style="font-size: 1.2em;">--</div>
             </div>
         </div>
 
@@ -224,8 +215,8 @@
         </div>
 
         <footer>
-            <p>Data updates every 15 minutes | Monitored by weaverc1</p>
-            <p style="margin-top: 10px; font-size: 0.85em;">Flood stages are approximate reference values. For official information, consult the National Weather Service.</p>
+            <p><strong>Status:</strong> <span id="status">--</span> | <strong>Last Updated:</strong> <span id="lastUpdate">--</span></p>
+            <p style="margin-top: 10px; font-size: 0.85em;">Data updates every 15 minutes | Flood stages are approximate reference values. For official information, consult the National Weather Service.</p>
         </footer>
     </div>
 
@@ -311,15 +302,18 @@
             const now = new Date();
             const defaultStart = new Date(now.getTime() - (DEFAULT_DAYS * 24 * 60 * 60 * 1000));
 
-            // Calculate Y-axis range to include both data and flood stages
-            const minStage = Math.min(...stages);
-            const maxStage = Math.max(...stages);
+            // Calculate Y-axis range for the default visible window (last 7 days)
+            const visibleStages = riverData.readings
+                .filter(r => new Date(r.timestamp) >= defaultStart)
+                .map(r => r.riverstage);
+
+            const minStage = Math.min(...visibleStages);
+            const maxStage = Math.max(...visibleStages);
             const maxFloodStage = riverData.flood_stages.near_record;
 
-            // Set Y-axis max to whichever is higher: the max data value or the highest flood stage
-            // Add 10% padding on both ends for better visualization
-            const yMin = Math.max(0, minStage - (maxFloodStage - minStage) * 0.1);
-            const yMax = Math.max(maxStage, maxFloodStage) * 1.1;
+            // Set Y-axis to include visible data and flood stages with padding
+            const yMin = Math.max(0, Math.min(minStage * 0.9, riverData.flood_stages.action * 0.9));
+            const yMax = Math.max(maxStage, maxFloodStage) * 1.05;
 
             const trace = {
                 x: timestamps,

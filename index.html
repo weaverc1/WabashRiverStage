@@ -161,16 +161,76 @@
         }
 
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8em;
+            body {
+                padding: 10px;
             }
-            
+
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            header p {
+                font-size: 0.9em;
+            }
+
+            header {
+                padding: 20px 15px;
+            }
+
+            .status-bar {
+                padding: 15px;
+                gap: 10px;
+            }
+
+            .status-card {
+                padding: 15px 10px;
+            }
+
+            .status-card h3 {
+                font-size: 0.7em;
+            }
+
             .status-card .value {
-                font-size: 2.2em;
+                font-size: 2.5em;
+            }
+
+            .chart-container {
+                padding: 15px;
             }
 
             #riverChart {
                 height: 400px;
+            }
+
+            .legend {
+                padding: 15px;
+            }
+
+            .legend h3 {
+                font-size: 1em;
+            }
+
+            .legend-items {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .legend-item {
+                padding: 8px;
+                font-size: 0.9em;
+            }
+
+            .legend-item strong {
+                min-width: auto;
+            }
+
+            footer {
+                padding: 15px;
+                font-size: 0.8em;
+            }
+
+            footer p {
+                margin-top: 8px !important;
             }
         }
     </style>

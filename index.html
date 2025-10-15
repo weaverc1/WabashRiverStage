@@ -98,6 +98,8 @@
         #riverChart {
             width: 100%;
             height: 600px;
+            max-width: 100%;
+            overflow: hidden;
         }
 
         .legend {
@@ -199,11 +201,17 @@
             }
 
             .chart-container {
-                padding: 15px;
+                padding: 10px;
+                overflow-x: hidden;
             }
 
             #riverChart {
                 height: 400px;
+                max-width: 100%;
+            }
+
+            .container {
+                overflow-x: hidden;
             }
 
             .legend {
@@ -296,7 +304,7 @@
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
                 <span class="desktop-version">Desktop v3.0</span>
-                <span class="mobile-version" style="display: none;">Mobile v1.5</span>
+                <span class="mobile-version" style="display: none;">Mobile v1.6</span>
             </p>
         </footer>
     </div>
@@ -502,10 +510,18 @@
                 responsive: true,
                 displayModeBar: !isMobile,
                 displaylogo: false,
-                modeBarButtonsToRemove: ['lasso2d', 'select2d']
+                modeBarButtonsToRemove: ['lasso2d', 'select2d'],
+                autosizable: true
             };
 
             Plotly.newPlot('riverChart', [trace], layout, config);
+
+            // Force resize on window resize for mobile
+            if (isMobile) {
+                window.addEventListener('resize', function() {
+                    Plotly.Plots.resize('riverChart');
+                });
+            }
         }
 
         function autoRefresh() {

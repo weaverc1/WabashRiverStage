@@ -305,17 +305,12 @@
             const now = new Date();
             const defaultStart = new Date(now.getTime() - (DEFAULT_DAYS * 24 * 60 * 60 * 1000));
 
-            // Calculate Y-axis range based only on actual stage data
-            const visibleStages = riverData.readings
-                .filter(r => new Date(r.timestamp) >= defaultStart)
-                .map(r => r.riverstage);
+            // Calculate Y-axis range based on ALL data (for range slider)
+            const maxStageInData = Math.max(...stages);
 
-            const minStage = Math.min(...visibleStages);
-            const maxStage = Math.max(...visibleStages);
-
-            // Set Y-axis to scale to actual data with padding
-            const yMin = Math.max(0, minStage * 0.95);
-            const yMax = maxStage * 1.05;
+            // Set Y-axis: lower bound always 0, upper bound scales to highest value with padding
+            const yMin = 0;
+            const yMax = maxStageInData * 1.1;
 
             const trace = {
                 x: timestamps,

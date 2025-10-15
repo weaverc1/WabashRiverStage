@@ -439,13 +439,16 @@
                 }
             ];
 
+            // Check if mobile
+            const isMobile = window.innerWidth <= 768;
+
             const layout = {
                 title: {
                     text: 'Wabash River Stage',
-                    font: { size: 20 }
+                    font: { size: isMobile ? 14 : 20 }
                 },
                 xaxis: {
-                    title: 'Date/Time',
+                    title: isMobile ? '' : 'Date/Time',
                     type: 'date',
                     range: [defaultStart, now],
                     rangeslider: { visible: true },
@@ -456,29 +459,32 @@
                             { count: 7, label: '7d', step: 'day', stepmode: 'backward' },
                             { count: 1, label: '1m', step: 'month', stepmode: 'backward' },
                             { step: 'all', label: 'All' }
-                        ]
+                        ],
+                        font: { size: isMobile ? 10 : 12 }
                     }
                 },
                 yaxis: {
-                    title: 'River Stage (feet)',
+                    title: isMobile ? 'Stage (ft)' : 'River Stage (feet)',
                     zeroline: false,
                     range: [yMin, yMax],
                     autorange: false
                 },
                 shapes: shapes,
                 hovermode: 'closest',
-                showlegend: true,
+                showlegend: !isMobile,
                 legend: {
                     x: 0,
                     y: 1,
                     bgcolor: 'rgba(255, 255, 255, 0.8)'
                 },
-                margin: { l: 60, r: 40, t: 60, b: 60 }
+                margin: isMobile
+                    ? { l: 50, r: 10, t: 40, b: 40 }
+                    : { l: 60, r: 40, t: 60, b: 60 }
             };
 
             const config = {
                 responsive: true,
-                displayModeBar: true,
+                displayModeBar: !isMobile,
                 displaylogo: false,
                 modeBarButtonsToRemove: ['lasso2d', 'select2d']
             };

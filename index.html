@@ -160,6 +160,10 @@
             font-size: 1.2em;
         }
 
+        .mobile-version {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             body {
                 padding: 10px;
@@ -232,6 +236,14 @@
             footer p {
                 margin-top: 8px !important;
             }
+
+            .desktop-version {
+                display: none;
+            }
+
+            .mobile-version {
+                display: inline !important;
+            }
         }
     </style>
 </head>
@@ -281,6 +293,10 @@
                 <strong>Related Gauges:</strong>
                 <a href="https://water.noaa.gov/gauges/TERI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Upstream (TERI3)</a> |
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
+            </p>
+            <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
+                <span class="desktop-version">Desktop v3.0</span>
+                <span class="mobile-version" style="display: none;">Mobile v1.5</span>
             </p>
         </footer>
     </div>

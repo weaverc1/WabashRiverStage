@@ -262,12 +262,12 @@
             document.getElementById('currentStage').textContent = currentStage.toFixed(2);
 
             const updateTime = new Date(latest.timestamp);
-            document.getElementById('lastUpdate').textContent = 
-                updateTime.toLocaleString('en-US', { 
-                    month: 'short', 
-                    day: 'numeric', 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
+            document.getElementById('lastUpdate').textContent =
+                updateTime.toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit'
                 });
 
             const card = document.getElementById('currentStageCard');

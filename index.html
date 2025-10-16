@@ -307,8 +307,8 @@
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v3.7</span>
-                <span class="mobile-version" style="display: none;">Mobile v2.3</span>
+                <span class="desktop-version">Desktop v3.8</span>
+                <span class="mobile-version" style="display: none;">Mobile v2.4</span>
             </p>
         </footer>
     </div>
@@ -410,8 +410,8 @@
 
             // Get the wrapper width to constrain the chart
             const chartWrapper = document.querySelector('.chart-wrapper');
-            // Subtract 20px to account for Plotly's internal spacing/padding
-            const wrapperWidth = chartWrapper.offsetWidth - 20;
+            // Subtract 40px to account for Plotly's internal spacing/padding
+            const wrapperWidth = chartWrapper.offsetWidth - 40;
 
             const trace = {
                 x: timestamps,
@@ -534,8 +534,8 @@
             window.addEventListener('resize', function() {
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(function() {
-                    // Subtract 20px to account for Plotly's internal spacing/padding
-                    const newWrapperWidth = chartWrapper.offsetWidth - 20;
+                    // Subtract 40px to account for Plotly's internal spacing/padding
+                    const newWrapperWidth = chartWrapper.offsetWidth - 40;
                     const newIsMobile = window.innerWidth <= 768;
 
                     Plotly.relayout('riverChart', {

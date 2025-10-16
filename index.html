@@ -17,6 +17,7 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
+            box-sizing: border-box;
         }
 
         .container {
@@ -26,7 +27,8 @@
             border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow-x: hidden;
-            width: 100%;
+            width: calc(100% - 40px);
+            max-width: calc(100vw - 40px);
         }
 
         header {
@@ -313,8 +315,8 @@
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v4.5</span>
-                <span class="mobile-version" style="display: none;">Mobile v3.5</span>
+                <span class="desktop-version">Desktop v4.6</span>
+                <span class="mobile-version" style="display: none;">Mobile v3.6</span>
             </p>
         </footer>
     </div>

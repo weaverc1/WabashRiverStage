@@ -317,8 +317,8 @@
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v4.0</span>
-                <span class="mobile-version" style="display: none;">Mobile v3.0</span>
+                <span class="desktop-version">Desktop v4.1-debug</span>
+                <span class="mobile-version" style="display: none;">Mobile v3.1-debug</span>
             </p>
         </footer>
     </div>
@@ -420,8 +420,16 @@
 
             // Get the wrapper width to constrain the chart
             const chartWrapper = document.querySelector('.chart-wrapper');
+            const chartContainer = document.querySelector('.chart-container');
+
+            // Log dimensions for debugging
+            console.log('Container width:', document.querySelector('.container').offsetWidth);
+            console.log('Chart container width:', chartContainer.offsetWidth);
+            console.log('Chart wrapper width:', chartWrapper.offsetWidth);
+
             // Subtract 60px to account for Plotly's internal spacing/padding
             const wrapperWidth = chartWrapper.offsetWidth - 60;
+            console.log('Width passed to Plotly:', wrapperWidth);
 
             const trace = {
                 x: timestamps,

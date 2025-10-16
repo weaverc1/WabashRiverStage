@@ -25,7 +25,8 @@
             background: white;
             border-radius: 15px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
+            overflow-x: hidden;
+            width: 100%;
         }
 
         header {
@@ -94,16 +95,22 @@
         .chart-container {
             padding: 30px;
             box-sizing: border-box;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         .chart-wrapper {
             width: 100%;
+            max-width: 100%;
             overflow: hidden;
+            box-sizing: border-box;
         }
 
         #riverChart {
             width: 100%;
             height: 600px;
+            max-width: 100%;
         }
 
         .legend {
@@ -206,14 +213,17 @@
 
             .chart-container {
                 padding: 10px;
+                overflow-x: hidden;
             }
 
             .chart-wrapper {
                 overflow: hidden;
+                max-width: 100%;
             }
 
             #riverChart {
                 height: 400px;
+                max-width: 100%;
             }
 
             .legend {
@@ -307,8 +317,8 @@
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v3.9</span>
-                <span class="mobile-version" style="display: none;">Mobile v2.5</span>
+                <span class="desktop-version">Desktop v4.0</span>
+                <span class="mobile-version" style="display: none;">Mobile v3.0</span>
             </p>
         </footer>
     </div>

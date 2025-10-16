@@ -94,13 +94,16 @@
         .chart-container {
             padding: 30px;
             box-sizing: border-box;
+        }
+
+        .chart-wrapper {
+            width: 100%;
             overflow: hidden;
         }
 
         #riverChart {
             width: 100%;
             height: 600px;
-            max-width: 100%;
         }
 
         .legend {
@@ -203,12 +206,14 @@
 
             .chart-container {
                 padding: 10px;
+            }
+
+            .chart-wrapper {
                 overflow: hidden;
             }
 
             #riverChart {
                 height: 400px;
-                max-width: 100%;
             }
 
             .legend {
@@ -267,7 +272,9 @@
         </div>
 
         <div class="chart-container">
-            <div id="riverChart" class="loading">Loading data...</div>
+            <div class="chart-wrapper">
+                <div id="riverChart" class="loading">Loading data...</div>
+            </div>
         </div>
 
         <div class="legend">
@@ -300,8 +307,8 @@
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v3.3</span>
-                <span class="mobile-version" style="display: none;">Mobile v1.9</span>
+                <span class="desktop-version">Desktop v3.4</span>
+                <span class="mobile-version" style="display: none;">Mobile v2.0</span>
             </p>
         </footer>
     </div>
@@ -401,6 +408,10 @@
             // Check if mobile
             const isMobile = window.innerWidth <= 768;
 
+            // Get the wrapper width to constrain the chart
+            const chartWrapper = document.querySelector('.chart-wrapper');
+            const wrapperWidth = chartWrapper.offsetWidth;
+
             const trace = {
                 x: timestamps,
                 y: stages,
@@ -464,7 +475,8 @@
             ];
 
             const layout = {
-                autosize: true,
+                width: wrapperWidth,
+                autosize: false,
                 title: {
                     text: 'Wabash River Stage',
                     font: { size: isMobile ? 14 : 20 }
@@ -505,7 +517,7 @@
             };
 
             const config = {
-                responsive: true,
+                responsive: false,
                 displayModeBar: !isMobile,
                 displaylogo: false,
                 modeBarButtonsToRemove: ['lasso2d', 'select2d']
@@ -513,9 +525,25 @@
 
             Plotly.newPlot('riverChart', [trace], layout, config);
 
-            // Handle window resize
+            // Handle window resize - recalculate width
+            let resizeTimeout;
             window.addEventListener('resize', function() {
-                Plotly.Plots.resize('riverChart');
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    const newWrapperWidth = chartWrapper.offsetWidth;
+                    const newIsMobile = window.innerWidth <= 768;
+
+                    Plotly.relayout('riverChart', {
+                        width: newWrapperWidth,
+                        'title.font.size': newIsMobile ? 14 : 20,
+                        'xaxis.title': newIsMobile ? '' : 'Date/Time',
+                        'yaxis.title': newIsMobile ? 'Stage (ft)' : 'River Stage (feet)',
+                        showlegend: !newIsMobile,
+                        margin: newIsMobile
+                            ? { l: 45, r: 5, t: 40, b: 40 }
+                            : { l: 60, r: 20, t: 60, b: 60 }
+                    });
+                }, 250);
             });
         }
 

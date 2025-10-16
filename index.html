@@ -95,7 +95,6 @@
         .chart-container {
             padding: 30px;
             box-sizing: border-box;
-            width: 100%;
             max-width: 100%;
             overflow-x: hidden;
         }
@@ -317,8 +316,8 @@
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v4.3</span>
-                <span class="mobile-version" style="display: none;">Mobile v3.3</span>
+                <span class="desktop-version">Desktop v4.4-debug</span>
+                <span class="mobile-version" style="display: none;">Mobile v3.4-debug</span>
             </p>
         </footer>
     </div>
@@ -427,7 +426,9 @@
             console.log('Chart container width:', chartContainer.offsetWidth);
             console.log('Chart wrapper width:', chartWrapper.offsetWidth);
 
-            // Subtract 150px to account for Plotly's internal spacing/padding
+            // Calculate width properly - wrapper width minus padding buffer
+            // The wrapper is 1153px, we need the chart to fit within that
+            // But we also need room for Plotly's internal elements
             const wrapperWidth = chartWrapper.offsetWidth - 150;
             console.log('Width passed to Plotly:', wrapperWidth);
 
@@ -546,6 +547,16 @@
             };
 
             Plotly.newPlot('riverChart', [trace], layout, config);
+
+            // Log actual rendered chart width after Plotly creates it
+            setTimeout(function() {
+                const plotlyDiv = document.getElementById('riverChart');
+                const svgElement = plotlyDiv.querySelector('.main-svg');
+                if (svgElement) {
+                    console.log('Actual Plotly SVG width:', svgElement.getAttribute('width'));
+                }
+                console.log('RiverChart div offsetWidth:', plotlyDiv.offsetWidth);
+            }, 100);
 
             // Handle window resize - recalculate width
             let resizeTimeout;

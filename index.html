@@ -315,8 +315,8 @@
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v4.6</span>
-                <span class="mobile-version" style="display: none;">Mobile v3.6</span>
+                <span class="desktop-version">Desktop v4.7-debug</span>
+                <span class="mobile-version" style="display: none;">Mobile v3.7-debug</span>
             </p>
         </footer>
     </div>
@@ -421,7 +421,13 @@
             const chartContainer = document.querySelector('.chart-container');
 
             // Log dimensions for debugging
+            console.log('=== VIEWPORT & CONTAINER ===');
+            console.log('Window inner width:', window.innerWidth);
+            console.log('Document body scrollWidth:', document.body.scrollWidth);
+            console.log('Document body offsetWidth:', document.body.offsetWidth);
             console.log('Container width:', document.querySelector('.container').offsetWidth);
+            console.log('Container scrollWidth:', document.querySelector('.container').scrollWidth);
+            console.log('=== CHART DIMENSIONS ===');
             console.log('Chart container width:', chartContainer.offsetWidth);
             console.log('Chart wrapper width:', chartWrapper.offsetWidth);
 
@@ -548,12 +554,23 @@
 
             // Log actual rendered chart width after Plotly creates it
             setTimeout(function() {
+                console.log('=== AFTER PLOTLY RENDER ===');
                 const plotlyDiv = document.getElementById('riverChart');
                 const svgElement = plotlyDiv.querySelector('.main-svg');
                 if (svgElement) {
                     console.log('Actual Plotly SVG width:', svgElement.getAttribute('width'));
                 }
                 console.log('RiverChart div offsetWidth:', plotlyDiv.offsetWidth);
+                console.log('RiverChart div scrollWidth:', plotlyDiv.scrollWidth);
+                console.log('Body scrollWidth after render:', document.body.scrollWidth);
+                console.log('Container scrollWidth after render:', document.querySelector('.container').scrollWidth);
+
+                // Check if there's horizontal scroll
+                const hasHorizontalScroll = document.body.scrollWidth > window.innerWidth;
+                console.log('Has horizontal scroll?', hasHorizontalScroll);
+                if (hasHorizontalScroll) {
+                    console.log('⚠️ OVERFLOW BY:', document.body.scrollWidth - window.innerWidth, 'px');
+                }
             }, 100);
 
             // Handle window resize - recalculate width

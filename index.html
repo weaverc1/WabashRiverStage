@@ -107,9 +107,7 @@
         }
 
         #riverChart {
-            width: 100%;
             height: 600px;
-            max-width: 100%;
         }
 
         .legend {
@@ -222,7 +220,6 @@
 
             #riverChart {
                 height: 400px;
-                max-width: 100%;
             }
 
             .legend {
@@ -316,8 +313,8 @@
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v4.4-debug</span>
-                <span class="mobile-version" style="display: none;">Mobile v3.4-debug</span>
+                <span class="desktop-version">Desktop v4.5</span>
+                <span class="mobile-version" style="display: none;">Mobile v3.5</span>
             </p>
         </footer>
     </div>
@@ -427,9 +424,8 @@
             console.log('Chart wrapper width:', chartWrapper.offsetWidth);
 
             // Calculate width properly - wrapper width minus padding buffer
-            // The wrapper is 1153px, we need the chart to fit within that
-            // But we also need room for Plotly's internal elements
-            const wrapperWidth = chartWrapper.offsetWidth - 150;
+            // Plotly respects our width, so we just need a small buffer
+            const wrapperWidth = chartWrapper.offsetWidth - 80;
             console.log('Width passed to Plotly:', wrapperWidth);
 
             const trace = {
@@ -563,8 +559,8 @@
             window.addEventListener('resize', function() {
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(function() {
-                    // Subtract 150px to account for Plotly's internal spacing/padding
-                    const newWrapperWidth = chartWrapper.offsetWidth - 150;
+                    // Subtract 80px buffer
+                    const newWrapperWidth = chartWrapper.offsetWidth - 80;
                     const newIsMobile = window.innerWidth <= 768;
 
                     Plotly.relayout('riverChart', {

@@ -317,8 +317,8 @@
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v4.2</span>
-                <span class="mobile-version" style="display: none;">Mobile v3.2</span>
+                <span class="desktop-version">Desktop v4.3</span>
+                <span class="mobile-version" style="display: none;">Mobile v3.3</span>
             </p>
         </footer>
     </div>
@@ -427,8 +427,8 @@
             console.log('Chart container width:', chartContainer.offsetWidth);
             console.log('Chart wrapper width:', chartWrapper.offsetWidth);
 
-            // Subtract 100px to account for Plotly's internal spacing/padding
-            const wrapperWidth = chartWrapper.offsetWidth - 100;
+            // Subtract 150px to account for Plotly's internal spacing/padding
+            const wrapperWidth = chartWrapper.offsetWidth - 150;
             console.log('Width passed to Plotly:', wrapperWidth);
 
             const trace = {
@@ -552,8 +552,8 @@
             window.addEventListener('resize', function() {
                 clearTimeout(resizeTimeout);
                 resizeTimeout = setTimeout(function() {
-                    // Subtract 100px to account for Plotly's internal spacing/padding
-                    const newWrapperWidth = chartWrapper.offsetWidth - 100;
+                    // Subtract 150px to account for Plotly's internal spacing/padding
+                    const newWrapperWidth = chartWrapper.offsetWidth - 150;
                     const newIsMobile = window.innerWidth <= 768;
 
                     Plotly.relayout('riverChart', {

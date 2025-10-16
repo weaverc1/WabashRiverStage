@@ -307,8 +307,8 @@
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v3.4</span>
-                <span class="mobile-version" style="display: none;">Mobile v2.0</span>
+                <span class="desktop-version">Desktop v3.5</span>
+                <span class="mobile-version" style="display: none;">Mobile v2.1</span>
             </p>
         </footer>
     </div>
@@ -487,6 +487,7 @@
                     range: [defaultStart, now],
                     rangeslider: { visible: true },
                     rangeselector: {
+                        visible: !isMobile,
                         buttons: [
                             { count: 1, label: '24h', step: 'day', stepmode: 'backward' },
                             { count: 3, label: '3d', step: 'day', stepmode: 'backward' },
@@ -494,7 +495,9 @@
                             { count: 1, label: '1m', step: 'month', stepmode: 'backward' },
                             { step: 'all', label: 'All' }
                         ],
-                        font: { size: isMobile ? 10 : 12 }
+                        font: { size: 12 },
+                        x: 0,
+                        y: 1.15
                     }
                 },
                 yaxis: {
@@ -512,8 +515,8 @@
                     bgcolor: 'rgba(255, 255, 255, 0.8)'
                 },
                 margin: isMobile
-                    ? { l: 45, r: 5, t: 40, b: 40 }
-                    : { l: 60, r: 20, t: 60, b: 60 }
+                    ? { l: 40, r: 3, t: 35, b: 10 }
+                    : { l: 50, r: 10, t: 50, b: 10 }
             };
 
             const config = {
@@ -537,11 +540,12 @@
                         width: newWrapperWidth,
                         'title.font.size': newIsMobile ? 14 : 20,
                         'xaxis.title': newIsMobile ? '' : 'Date/Time',
+                        'xaxis.rangeselector.visible': !newIsMobile,
                         'yaxis.title': newIsMobile ? 'Stage (ft)' : 'River Stage (feet)',
                         showlegend: !newIsMobile,
                         margin: newIsMobile
-                            ? { l: 45, r: 5, t: 40, b: 40 }
-                            : { l: 60, r: 20, t: 60, b: 60 }
+                            ? { l: 40, r: 3, t: 35, b: 10 }
+                            : { l: 50, r: 10, t: 50, b: 10 }
                     });
                 }, 250);
             });

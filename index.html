@@ -315,8 +315,8 @@
                 <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
             </p>
             <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v4.7-debug</span>
-                <span class="mobile-version" style="display: none;">Mobile v3.7-debug</span>
+                <span class="desktop-version">Desktop v4.8-debug</span>
+                <span class="mobile-version" style="display: none;">Mobile v3.8-debug</span>
             </p>
         </footer>
     </div>
@@ -570,6 +570,23 @@
                 console.log('Has horizontal scroll?', hasHorizontalScroll);
                 if (hasHorizontalScroll) {
                     console.log('⚠️ OVERFLOW BY:', document.body.scrollWidth - window.innerWidth, 'px');
+                }
+
+                // Check container position and visibility
+                const container = document.querySelector('.container');
+                const containerRect = container.getBoundingClientRect();
+                console.log('=== CONTAINER VISIBILITY ===');
+                console.log('Container left edge:', containerRect.left, 'px');
+                console.log('Container right edge:', containerRect.right, 'px');
+                console.log('Viewport width:', window.innerWidth, 'px');
+                console.log('Left visible?', containerRect.left >= 0);
+                console.log('Right visible?', containerRect.right <= window.innerWidth);
+
+                if (containerRect.left < 0) {
+                    console.log('⚠️ LEFT SIDE CUT OFF BY:', Math.abs(containerRect.left), 'px');
+                }
+                if (containerRect.right > window.innerWidth) {
+                    console.log('⚠️ RIGHT SIDE CUT OFF BY:', containerRect.right - window.innerWidth, 'px');
                 }
             }, 100);
 

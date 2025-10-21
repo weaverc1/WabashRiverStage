@@ -126,8 +126,8 @@ def git_commit_and_push(repo_path, data_file):
             print("No changes to commit")
             return True
         
-        # Commit with timestamp
-        commit_msg = f"Update river stage data - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        # Commit with timestamp and [skip ci] to avoid triggering GitHub Pages rebuild
+        commit_msg = f"Update river stage data - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} [skip ci]"
         subprocess.run(['git', 'commit', '-m', commit_msg], check=True)
         
         # Push to GitHub

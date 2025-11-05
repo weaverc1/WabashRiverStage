@@ -641,7 +641,13 @@
             const stages = riverData.readings.map(r => r.riverstage);
 
             const now = new Date();
-            const defaultStart = new Date(now.getTime() - (DEFAULT_DAYS * 24 * 60 * 60 * 1000));
+
+            // Center the chart on current time
+            // Show 2.5 days of history and 2.5 days of forecast
+            const daysBeforeNow = 2.5;
+            const daysAfterNow = 2.5;
+            const defaultStart = new Date(now.getTime() - (daysBeforeNow * 24 * 60 * 60 * 1000));
+            const defaultEnd = new Date(now.getTime() + (daysAfterNow * 24 * 60 * 60 * 1000));
 
             // Calculate Y-axis range
             const maxStageInData = Math.max(...stages);
@@ -755,7 +761,7 @@
                 xaxis: {
                     title: '',
                     type: 'date',
-                    range: [defaultStart, now],
+                    range: [defaultStart, defaultEnd],
                     gridcolor: '#e9ecef',
                     showgrid: true,
                     fixedrange: false,

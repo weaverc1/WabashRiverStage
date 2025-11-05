@@ -8,7 +8,7 @@
     "major": 28,
     "near_record": 29
   },
-  "last_updated": "2025-11-05T15:00:01.604640",
+  "last_updated": "2025-11-05T15:15:02.196293",
   "readings": [
     {
       "timestamp": "2025-09-16T12:56:07.791643",
@@ -24174,40 +24174,45 @@
       "timestamp": "2025-11-05T14:53:41.128013",
       "riverstage": 3.894,
       "date_display": "2025-11-05 14:53:41"
+    },
+    {
+      "timestamp": "2025-11-05T15:08:46.132929",
+      "riverstage": 3.888,
+      "date_display": "2025-11-05 15:08:46"
     }
   ],
   "forecast": [
     {
-      "timestamp": "2025-11-06T14:38:46.137902",
-      "riverstage": 2.91,
-      "date_display": "2025-11-06 14:38:46",
+      "timestamp": "2025-11-06T14:53:41.128013",
+      "riverstage": 2.9,
+      "date_display": "2025-11-06 14:53:41",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-11-07T14:38:46.137902",
-      "riverstage": 3.2,
-      "date_display": "2025-11-07 14:38:46",
+      "timestamp": "2025-11-07T14:53:41.128013",
+      "riverstage": 3.19,
+      "date_display": "2025-11-07 14:53:41",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-11-08T14:38:46.137902",
+      "timestamp": "2025-11-08T14:53:41.128013",
       "riverstage": 3.49,
-      "date_display": "2025-11-08 14:38:46",
+      "date_display": "2025-11-08 14:53:41",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-11-09T14:38:46.137902",
+      "timestamp": "2025-11-09T14:53:41.128013",
       "riverstage": 3.67,
-      "date_display": "2025-11-09 14:38:46",
+      "date_display": "2025-11-09 14:53:41",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-11-10T14:38:46.137902",
+      "timestamp": "2025-11-10T14:53:41.128013",
       "riverstage": 3.49,
-      "date_display": "2025-11-10 14:38:46",
+      "date_display": "2025-11-10 14:53:41",
       "is_forecast": true
     }
   ],
-  "forecast_generated": "2025-11-05T14:45:20.214494",
+  "forecast_generated": "2025-11-05T15:11:21.884753",
   "forecast_method": "Interpolation from TERI3/RVTI3 NOAA forecasts"
 }

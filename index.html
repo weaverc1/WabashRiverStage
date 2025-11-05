@@ -14,39 +14,80 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f5f5f5;
             min-height: 100vh;
-            padding: 20px;
             box-sizing: border-box;
+        }
+
+        .nav-bar {
+            background: #003366;
+            color: white;
+            padding: 12px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-bar .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-bar h2 {
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow: hidden;
-            width: calc(100% - 40px);
-            max-width: calc(100vw - 40px);
         }
 
         header {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            background: #003366;
             color: white;
-            padding: 30px;
-            text-align: center;
+            padding: 20px 30px;
+            border-bottom: 3px solid #0055aa;
         }
 
         header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 600;
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            font-weight: 500;
         }
 
         header p {
-            font-size: 1.1em;
-            opacity: 0.9;
+            font-size: 0.95em;
+            opacity: 0.95;
+        }
+
+        .mobile-notice {
+            display: none;
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px 20px;
+            text-align: center;
+            border-bottom: 1px solid #ffc107;
+            font-size: 0.9em;
         }
 
         .status-bar {
@@ -112,6 +153,83 @@
             height: 600px;
         }
 
+        .info-section {
+            padding: 25px 30px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .info-section h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #003366;
+            font-weight: 500;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0055aa;
+        }
+
+        .flood-impacts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .impact-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid;
+        }
+
+        .impact-card.action { border-left-color: #f1c40f; }
+        .impact-card.minor { border-left-color: #e67e22; }
+        .impact-card.moderate { border-left-color: #e74c3c; }
+        .impact-card.major { border-left-color: #c0392b; }
+
+        .impact-card h4 {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #003366;
+        }
+
+        .impact-card .stage-value {
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .impact-card p {
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .historical-info {
+            background: #e3f2fd;
+            padding: 15px 20px;
+            border-radius: 4px;
+            border-left: 4px solid #0055aa;
+            margin-top: 15px;
+        }
+
+        .historical-info h4 {
+            font-size: 1.05em;
+            margin-bottom: 10px;
+            color: #003366;
+        }
+
+        .historical-info p {
+            font-size: 0.95em;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .historical-info p:last-child {
+            margin-bottom: 0;
+        }
+
         .legend {
             padding: 20px 30px;
             background: #f8f9fa;
@@ -121,7 +239,7 @@
         .legend h3 {
             font-size: 1.2em;
             margin-bottom: 15px;
-            color: #2c3e50;
+            color: #003366;
         }
 
         .legend-items {
@@ -135,7 +253,7 @@
             align-items: center;
             padding: 10px;
             background: white;
-            border-radius: 5px;
+            border-radius: 4px;
             border-left: 4px solid;
         }
 
@@ -178,19 +296,41 @@
 
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 0;
+            }
+
+            .nav-bar {
+                padding: 10px 15px;
+            }
+
+            .nav-bar .nav-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-bar h2 {
+                font-size: 1em;
+            }
+
+            .nav-links {
+                gap: 15px;
+                font-size: 0.85em;
+            }
+
+            .mobile-notice {
+                display: block;
             }
 
             header h1 {
-                font-size: 1.5em;
+                font-size: 1.3em;
             }
 
             header p {
-                font-size: 0.9em;
+                font-size: 0.85em;
             }
 
             header {
-                padding: 20px 15px;
+                padding: 15px 20px;
             }
 
             .status-bar {
@@ -222,6 +362,35 @@
 
             #riverChart {
                 height: 400px;
+            }
+
+            .info-section {
+                padding: 20px 15px;
+            }
+
+            .info-section h3 {
+                font-size: 1.1em;
+            }
+
+            .flood-impacts {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .impact-card {
+                padding: 12px;
+            }
+
+            .impact-card h4 {
+                font-size: 1em;
+            }
+
+            .historical-info {
+                padding: 12px 15px;
+            }
+
+            .historical-info h4 {
+                font-size: 1em;
             }
 
             .legend {
@@ -266,10 +435,25 @@
     </style>
 </head>
 <body>
+    <div class="nav-bar">
+        <div class="nav-content">
+            <h2>National Weather Service - River Monitoring</h2>
+            <div class="nav-links">
+                <a href="#data">Data</a>
+                <a href="#impacts">Flood Impacts</a>
+                <a href="#history">History</a>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
+        <div class="mobile-notice">
+            This page is best viewed on a device larger than 640 pixels. Please rotate to landscape orientation for optimal viewing.
+        </div>
+
         <header>
-            <h1>🌊 Wabash River at Hutsonville Bridge</h1>
-            <p>Real-time River Stage Monitoring</p>
+            <h1>Wabash River at Hutsonville Bridge</h1>
+            <p>Real-time River Stage Monitoring System</p>
         </header>
 
         <div class="status-bar">
@@ -279,9 +463,48 @@
             </div>
         </div>
 
-        <div class="chart-container">
+        <div class="chart-container" id="data">
             <div class="chart-wrapper">
                 <div id="riverChart" class="loading">Loading data...</div>
+            </div>
+        </div>
+
+        <div class="info-section" id="impacts">
+            <h3>Flood Impact Information</h3>
+            <div class="flood-impacts">
+                <div class="impact-card action">
+                    <h4>Action Stage</h4>
+                    <div class="stage-value">12.0 feet</div>
+                    <p>Minor flooding begins in low-lying areas. Monitoring and preparation recommended for vulnerable locations along the river.</p>
+                </div>
+                <div class="impact-card minor">
+                    <h4>Minor Flood Stage</h4>
+                    <div class="stage-value">16.0 feet</div>
+                    <p>Flooding of agricultural land and secondary roads near the river. Some evacuations of property may be necessary.</p>
+                </div>
+                <div class="impact-card moderate">
+                    <h4>Moderate Flood Stage</h4>
+                    <div class="stage-value">24.0 feet</div>
+                    <p>Significant flooding of residential and commercial areas. Roads may become impassable. Structures near the river at risk.</p>
+                </div>
+                <div class="impact-card major">
+                    <h4>Major Flood Stage</h4>
+                    <div class="stage-value">28.0 feet</div>
+                    <p>Extensive flooding of residential and commercial structures. Major evacuations likely. Significant threat to life and property.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section" id="history">
+            <h3>Local Information & History</h3>
+            <div class="historical-info">
+                <h4>Site Information</h4>
+                <p>This monitoring location is at the former Hutsonville Power Plant (now closed). The site was previously operated by Central Illinois Public Service and continues to provide critical river stage data for flood forecasting and public safety.</p>
+
+                <h4>Historical Flood Events</h4>
+                <p><strong>April 2013 Flood:</strong> During the April 2013 flood event at Hutsonville, significant measurement discrepancies were discovered between readings taken at the State Road 154 bridge and this location. On April 24, the SR 154 readings were nearly 2 feet lower than the Power Plant reading, highlighting the importance of monitoring multiple gauge locations along the river.</p>
+
+                <p><strong>Data Availability:</strong> Forecasts are issued as needed during times of high water but are not routinely available at this gauge. Detailed stream discharge and gauge height archives from the U.S. Geological Survey are not available for this specific location.</p>
             </div>
         </div>
 
@@ -375,24 +598,24 @@
             const statusElement = document.getElementById('status');
             
             card.classList.remove('warning', 'danger');
-            
+
             if (currentStage >= riverData.flood_stages.near_record) {
-                statusElement.textContent = '⚠️ Near Record';
+                statusElement.textContent = 'Near Record';
                 card.classList.add('danger');
             } else if (currentStage >= riverData.flood_stages.major) {
-                statusElement.textContent = '🚨 Major';
+                statusElement.textContent = 'Major Flooding';
                 card.classList.add('danger');
             } else if (currentStage >= riverData.flood_stages.moderate) {
-                statusElement.textContent = '⚠️ Moderate';
+                statusElement.textContent = 'Moderate Flooding';
                 card.classList.add('danger');
             } else if (currentStage >= riverData.flood_stages.flood) {
-                statusElement.textContent = '⚠️ Flooding';
+                statusElement.textContent = 'Minor Flooding';
                 card.classList.add('warning');
             } else if (currentStage >= riverData.flood_stages.action) {
-                statusElement.textContent = '⚠️ Action';
+                statusElement.textContent = 'Action Stage';
                 card.classList.add('warning');
             } else {
-                statusElement.textContent = '✓ Normal';
+                statusElement.textContent = 'Normal';
             }
         }
 

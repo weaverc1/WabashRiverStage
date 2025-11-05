@@ -13,533 +13,507 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e8eef2;
             min-height: 100vh;
-            box-sizing: border-box;
         }
 
-        .nav-bar {
-            background: #003366;
+        .header-bar {
+            background: linear-gradient(135deg, #1e5a8e 0%, #2471a3 100%);
             color: white;
-            padding: 12px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         }
 
-        .nav-bar .nav-content {
+        .header-bar .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-bar h1 {
+            font-size: 1.8em;
+            font-weight: 400;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .header-bar .subtitle {
+            font-size: 0.95em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .nav-tabs {
+            background: #ffffff;
+            border-bottom: 2px solid #d5dde4;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .nav-tabs .nav-content {
             max-width: 1400px;
             margin: 0 auto;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 5px;
+            padding: 0 20px;
         }
 
-        .nav-bar h2 {
-            font-size: 1.2em;
+        .nav-tabs a {
+            padding: 12px 24px;
+            color: #2471a3;
+            text-decoration: none;
+            font-size: 0.95em;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
             font-weight: 500;
         }
 
-        .nav-links {
-            display: flex;
-            gap: 20px;
+        .nav-tabs a:hover {
+            background: #f0f4f7;
+            border-bottom-color: #2471a3;
         }
 
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-
-        .nav-links a:hover {
-            text-decoration: underline;
+        .nav-tabs a.active {
+            color: #1e5a8e;
+            border-bottom-color: #1e5a8e;
+            background: #f8fafb;
         }
 
         .container {
             max-width: 1400px;
-            margin: 0 auto;
+            margin: 20px auto;
             background: white;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
             overflow: hidden;
         }
 
-        header {
-            background: #003366;
-            color: white;
-            padding: 20px 30px;
-            border-bottom: 3px solid #0055aa;
+        .status-banner {
+            background: linear-gradient(to right, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px 30px;
+            border-bottom: 3px solid #d5dde4;
         }
 
-        header h1 {
-            font-size: 1.8em;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        header p {
-            font-size: 0.95em;
-            opacity: 0.95;
-        }
-
-        .mobile-notice {
-            display: none;
-            background: #fff3cd;
-            color: #856404;
-            padding: 10px 20px;
-            text-align: center;
-            border-bottom: 1px solid #ffc107;
-            font-size: 0.9em;
-        }
-
-        .status-bar {
+        .status-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            padding: 20px 0;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e0e0e0;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
         }
 
-        .status-card {
-            background: white;
-            padding: 12px 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .status-item {
             text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            border-left: 4px solid #2471a3;
         }
 
-        .status-card h3 {
-            font-size: 0.75em;
-            color: #666;
-            margin-bottom: 6px;
+        .status-item .label {
+            font-size: 0.8em;
+            color: #6c757d;
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
 
-        .status-card .value {
+        .status-item .value {
             font-size: 3em;
-            font-weight: bold;
-            color: #2c3e50;
+            font-weight: 300;
+            color: #1e5a8e;
+            line-height: 1;
         }
 
-        .status-card .unit {
-            font-size: 1em;
-            color: #999;
+        .status-item .unit {
+            font-size: 0.9em;
+            color: #868e96;
             margin-left: 5px;
         }
 
-        .status-card.warning .value {
-            color: #f39c12;
+        .status-item .subtext {
+            font-size: 0.85em;
+            color: #495057;
+            margin-top: 8px;
+            font-weight: 500;
         }
 
-        .status-card.danger .value {
-            color: #e74c3c;
+        .status-item.warning {
+            border-left-color: #ff9800;
         }
 
-        .chart-container {
-            padding: 20px;
-            box-sizing: border-box;
-            max-width: 100%;
-            overflow-x: hidden;
+        .status-item.warning .value {
+            color: #f57c00;
         }
 
-        .chart-wrapper {
-            width: 100%;
-            max-width: 100%;
-            overflow: hidden;
-            box-sizing: border-box;
+        .status-item.danger {
+            border-left-color: #f44336;
+        }
+
+        .status-item.danger .value {
+            color: #d32f2f;
+        }
+
+        .chart-section {
+            padding: 30px;
+            background: #fafbfc;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            color: #1e5a8e;
+            margin-bottom: 20px;
+            font-weight: 400;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #d5dde4;
         }
 
         #riverChart {
-            height: 600px;
-        }
-
-        .info-section {
-            padding: 25px 30px;
+            height: 550px;
             background: white;
-            border-top: 1px solid #e0e0e0;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
 
-        .info-section h3 {
-            font-size: 1.3em;
-            margin-bottom: 15px;
-            color: #003366;
-            font-weight: 500;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #0055aa;
+        .info-panel {
+            padding: 30px;
+            background: white;
         }
 
-        .flood-impacts {
+        .info-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            gap: 20px;
+            margin-top: 20px;
         }
 
-        .impact-card {
+        .info-card {
             background: #f8f9fa;
-            padding: 15px;
-            border-radius: 4px;
-            border-left: 4px solid;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 5px solid;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .impact-card.action { border-left-color: #f1c40f; }
-        .impact-card.minor { border-left-color: #e67e22; }
-        .impact-card.moderate { border-left-color: #e74c3c; }
-        .impact-card.major { border-left-color: #c0392b; }
-
-        .impact-card h4 {
-            font-size: 1.1em;
-            margin-bottom: 8px;
-            color: #003366;
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .impact-card .stage-value {
-            font-weight: bold;
-            color: #666;
-            margin-bottom: 8px;
+        .info-card.action { border-left-color: #ffc107; }
+        .info-card.minor { border-left-color: #ff9800; }
+        .info-card.moderate { border-left-color: #ff5722; }
+        .info-card.major { border-left-color: #f44336; }
+
+        .info-card h3 {
+            font-size: 1.15em;
+            color: #1e5a8e;
+            margin-bottom: 10px;
+            font-weight: 500;
         }
 
-        .impact-card p {
+        .info-card .stage {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .info-card p {
             font-size: 0.9em;
-            color: #555;
-            line-height: 1.5;
-        }
-
-        .historical-info {
-            background: #e3f2fd;
-            padding: 15px 20px;
-            border-radius: 4px;
-            border-left: 4px solid #0055aa;
-            margin-top: 15px;
-        }
-
-        .historical-info h4 {
-            font-size: 1.05em;
-            margin-bottom: 10px;
-            color: #003366;
-        }
-
-        .historical-info p {
-            font-size: 0.95em;
-            color: #333;
+            color: #495057;
             line-height: 1.6;
-            margin-bottom: 10px;
         }
 
-        .historical-info p:last-child {
-            margin-bottom: 0;
+        .historical-section {
+            background: #e3f2fd;
+            padding: 25px;
+            border-radius: 6px;
+            border-left: 5px solid #2471a3;
+            margin-top: 25px;
         }
 
-        .legend {
-            padding: 20px 30px;
-            background: #f8f9fa;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .legend h3 {
+        .historical-section h3 {
             font-size: 1.2em;
+            color: #1e5a8e;
             margin-bottom: 15px;
-            color: #003366;
+            font-weight: 500;
         }
 
-        .legend-items {
+        .historical-section p {
+            font-size: 0.95em;
+            color: #37474f;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .legend-section {
+            padding: 25px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .legend-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
+            margin-top: 15px;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            padding: 10px;
+            padding: 12px 15px;
             background: white;
             border-radius: 4px;
             border-left: 4px solid;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
         }
 
-        .legend-item.action { border-left-color: #f1c40f; }
-        .legend-item.flood { border-left-color: #e67e22; }
-        .legend-item.moderate { border-left-color: #e74c3c; }
-        .legend-item.major { border-left-color: #c0392b; }
-        .legend-item.near-record { border-left-color: #8e44ad; }
+        .legend-item.action { border-left-color: #ffc107; }
+        .legend-item.flood { border-left-color: #ff9800; }
+        .legend-item.moderate { border-left-color: #ff5722; }
+        .legend-item.major { border-left-color: #f44336; }
+        .legend-item.near-record { border-left-color: #9c27b0; }
 
-        .legend-item strong {
+        .legend-item .label {
+            font-weight: 600;
+            color: #2c3e50;
             margin-right: 10px;
-            min-width: 140px;
+            min-width: 120px;
+        }
+
+        .legend-item .value {
+            color: #6c757d;
+            font-size: 0.95em;
         }
 
         footer {
-            padding: 20px 30px;
+            padding: 25px 30px;
             text-align: center;
-            color: #666;
+            background: white;
+            color: #6c757d;
             font-size: 0.9em;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid #e9ecef;
+        }
+
+        footer a {
+            color: #2471a3;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-divider {
+            margin: 15px 0;
+            color: #dee2e6;
         }
 
         .loading {
             text-align: center;
-            padding: 50px;
-            font-size: 1.2em;
-            color: #666;
+            padding: 80px 20px;
+            color: #6c757d;
+            font-size: 1.1em;
         }
 
         .error {
             text-align: center;
-            padding: 50px;
-            color: #e74c3c;
-            font-size: 1.2em;
-        }
-
-        .mobile-version {
-            display: none;
+            padding: 80px 20px;
+            color: #f44336;
+            font-size: 1.1em;
         }
 
         @media (max-width: 768px) {
-            body {
-                padding: 0;
-            }
-
-            .nav-bar {
-                padding: 10px 15px;
-            }
-
-            .nav-bar .nav-content {
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .nav-bar h2 {
-                font-size: 1em;
-            }
-
-            .nav-links {
-                gap: 15px;
-                font-size: 0.85em;
-            }
-
-            .mobile-notice {
-                display: block;
-            }
-
-            header h1 {
-                font-size: 1.3em;
-            }
-
-            header p {
-                font-size: 0.85em;
-            }
-
-            header {
+            .header-bar {
                 padding: 15px 20px;
             }
 
-            .status-bar {
-                padding: 15px;
-                gap: 10px;
+            .header-bar h1 {
+                font-size: 1.3em;
             }
 
-            .status-card {
-                padding: 15px 10px;
+            .header-bar .subtitle {
+                font-size: 0.85em;
             }
 
-            .status-card h3 {
-                font-size: 0.7em;
+            .nav-tabs .nav-content {
+                flex-wrap: wrap;
+                padding: 0 10px;
             }
 
-            .status-card .value {
+            .nav-tabs a {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+
+            .status-banner {
+                padding: 20px 15px;
+            }
+
+            .status-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .status-item .value {
                 font-size: 2.5em;
             }
 
-            .chart-container {
-                padding: 10px;
-                overflow-x: hidden;
-            }
-
-            .chart-wrapper {
-                overflow: hidden;
-                max-width: 100%;
+            .chart-section {
+                padding: 20px 15px;
             }
 
             #riverChart {
                 height: 400px;
             }
 
-            .info-section {
+            .info-panel {
                 padding: 20px 15px;
             }
 
-            .info-section h3 {
-                font-size: 1.1em;
+            .section-title {
+                font-size: 1.2em;
             }
 
-            .flood-impacts {
+            .info-grid {
                 grid-template-columns: 1fr;
-                gap: 12px;
             }
 
-            .impact-card {
-                padding: 12px;
-            }
-
-            .impact-card h4 {
-                font-size: 1em;
-            }
-
-            .historical-info {
-                padding: 12px 15px;
-            }
-
-            .historical-info h4 {
-                font-size: 1em;
-            }
-
-            .legend {
-                padding: 15px;
-            }
-
-            .legend h3 {
-                font-size: 1em;
-            }
-
-            .legend-items {
+            .legend-grid {
                 grid-template-columns: 1fr;
-                gap: 10px;
-            }
-
-            .legend-item {
-                padding: 8px;
-                font-size: 0.9em;
-            }
-
-            .legend-item strong {
-                min-width: auto;
             }
 
             footer {
-                padding: 15px;
-                font-size: 0.8em;
-            }
-
-            footer p {
-                margin-top: 8px !important;
-            }
-
-            .desktop-version {
-                display: none;
-            }
-
-            .mobile-version {
-                display: inline !important;
+                padding: 20px 15px;
+                font-size: 0.85em;
             }
         }
     </style>
 </head>
 <body>
-    <div class="nav-bar">
+    <div class="header-bar">
+        <div class="header-content">
+            <h1>Wabash River at Hutsonville Bridge</h1>
+            <p class="subtitle">Real-Time River Stage Monitoring Station</p>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
         <div class="nav-content">
-            <h2>National Weather Service - River Monitoring</h2>
-            <div class="nav-links">
-                <a href="#data">Data</a>
-                <a href="#impacts">Flood Impacts</a>
-                <a href="#history">History</a>
-            </div>
+            <a href="#overview" class="active">Overview</a>
+            <a href="#data">Data & Graph</a>
+            <a href="#impacts">Flood Impacts</a>
+            <a href="#history">History & Info</a>
         </div>
     </div>
 
     <div class="container">
-        <div class="mobile-notice">
-            This page is best viewed on a device larger than 640 pixels. Please rotate to landscape orientation for optimal viewing.
-        </div>
-
-        <header>
-            <h1>Wabash River at Hutsonville Bridge</h1>
-            <p>Real-time River Stage Monitoring System</p>
-        </header>
-
-        <div class="status-bar">
-            <div class="status-card" id="currentStageCard">
-                <h3>Current Stage (ft)</h3>
-                <div class="value" id="currentStage">--</div>
+        <div class="status-banner" id="overview">
+            <div class="status-grid">
+                <div class="status-item" id="currentStageCard">
+                    <div class="label">Current Stage</div>
+                    <div class="value" id="currentStage">--</div>
+                    <div class="subtext" id="statusText">Loading...</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Flood Stage</div>
+                    <div class="value">16.0<span class="unit">ft</span></div>
+                    <div class="subtext">Minor Flooding</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Last Updated</div>
+                    <div class="value" style="font-size: 1.2em; padding-top: 10px;" id="lastUpdate">--</div>
+                </div>
             </div>
         </div>
 
-        <div class="chart-container" id="data">
-            <div class="chart-wrapper">
-                <div id="riverChart" class="loading">Loading data...</div>
-            </div>
+        <div class="chart-section" id="data">
+            <h2 class="section-title">River Stage Hydrograph</h2>
+            <div id="riverChart" class="loading">Loading hydrograph data...</div>
         </div>
 
-        <div class="info-section" id="impacts">
-            <h3>Flood Impact Information</h3>
-            <div class="flood-impacts">
-                <div class="impact-card action">
-                    <h4>Action Stage</h4>
-                    <div class="stage-value">12.0 feet</div>
+        <div class="info-panel" id="impacts">
+            <h2 class="section-title">Flood Impact Stages</h2>
+            <div class="info-grid">
+                <div class="info-card action">
+                    <h3>Action Stage</h3>
+                    <div class="stage">12.0 feet</div>
                     <p>Minor flooding begins in low-lying areas. Monitoring and preparation recommended for vulnerable locations along the river.</p>
                 </div>
-                <div class="impact-card minor">
-                    <h4>Minor Flood Stage</h4>
-                    <div class="stage-value">16.0 feet</div>
+                <div class="info-card minor">
+                    <h3>Minor Flood Stage</h3>
+                    <div class="stage">16.0 feet</div>
                     <p>Flooding of agricultural land and secondary roads near the river. Some evacuations of property may be necessary.</p>
                 </div>
-                <div class="impact-card moderate">
-                    <h4>Moderate Flood Stage</h4>
-                    <div class="stage-value">24.0 feet</div>
+                <div class="info-card moderate">
+                    <h3>Moderate Flood Stage</h3>
+                    <div class="stage">24.0 feet</div>
                     <p>Significant flooding of residential and commercial areas. Roads may become impassable. Structures near the river at risk.</p>
                 </div>
-                <div class="impact-card major">
-                    <h4>Major Flood Stage</h4>
-                    <div class="stage-value">28.0 feet</div>
+                <div class="info-card major">
+                    <h3>Major Flood Stage</h3>
+                    <div class="stage">28.0 feet</div>
                     <p>Extensive flooding of residential and commercial structures. Major evacuations likely. Significant threat to life and property.</p>
                 </div>
             </div>
         </div>
 
-        <div class="info-section" id="history">
-            <h3>Local Information & History</h3>
-            <div class="historical-info">
-                <h4>Site Information</h4>
+        <div class="info-panel" id="history">
+            <h2 class="section-title">Station Information & Historical Data</h2>
+
+            <div class="historical-section">
+                <h3>About This Monitoring Station</h3>
                 <p>This monitoring location is at the former Hutsonville Power Plant (now closed). The site was previously operated by Central Illinois Public Service and continues to provide critical river stage data for flood forecasting and public safety.</p>
+            </div>
 
-                <h4>Historical Flood Events</h4>
+            <div class="historical-section">
+                <h3>Notable Flood Events</h3>
                 <p><strong>April 2013 Flood:</strong> During the April 2013 flood event at Hutsonville, significant measurement discrepancies were discovered between readings taken at the State Road 154 bridge and this location. On April 24, the SR 154 readings were nearly 2 feet lower than the Power Plant reading, highlighting the importance of monitoring multiple gauge locations along the river.</p>
-
                 <p><strong>Data Availability:</strong> Forecasts are issued as needed during times of high water but are not routinely available at this gauge. Detailed stream discharge and gauge height archives from the U.S. Geological Survey are not available for this specific location.</p>
             </div>
         </div>
 
-        <div class="legend">
-            <h3>Flood Stage Reference</h3>
-            <div class="legend-items">
+        <div class="legend-section">
+            <h2 class="section-title">Flood Stage Reference Guide</h2>
+            <div class="legend-grid">
                 <div class="legend-item action">
-                    <strong>Action Stage:</strong> 12 ft
+                    <span class="label">Action Stage</span>
+                    <span class="value">12.0 feet</span>
                 </div>
                 <div class="legend-item flood">
-                    <strong>Flood Stage:</strong> 16 ft
+                    <span class="label">Flood Stage</span>
+                    <span class="value">16.0 feet</span>
                 </div>
                 <div class="legend-item moderate">
-                    <strong>Moderate Flooding:</strong> 24 ft
+                    <span class="label">Moderate Flooding</span>
+                    <span class="value">24.0 feet</span>
                 </div>
                 <div class="legend-item major">
-                    <strong>Major Flooding:</strong> 28 ft
+                    <span class="label">Major Flooding</span>
+                    <span class="value">28.0 feet</span>
                 </div>
                 <div class="legend-item near-record">
-                    <strong>Near Record:</strong> 29 ft
+                    <span class="label">Near Record</span>
+                    <span class="value">29.0 feet</span>
                 </div>
             </div>
         </div>
 
         <footer>
-            <p><strong>Status:</strong> <span id="status">--</span> | <strong>Last Updated:</strong> <span id="lastUpdate">--</span></p>
-            <p style="margin-top: 10px; font-size: 0.85em;">Data updates every 15 minutes | Flood stages are approximate reference values. For official information, consult the National Weather Service.</p>
-            <p style="margin-top: 15px; font-size: 0.9em;">
-                <strong>Related Gauges:</strong>
-                <a href="https://water.noaa.gov/gauges/TERI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Upstream (TERI3)</a> |
-                <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer" style="color: #3498db; text-decoration: none; margin: 0 10px;">Downstream (RVTI3)</a>
+            <p><strong>Data Updates:</strong> Automatic updates every 15 minutes</p>
+            <p class="footer-divider">• • •</p>
+            <p>
+                <strong>Related Monitoring Stations:</strong><br>
+                <a href="https://water.noaa.gov/gauges/TERI3" target="_blank" rel="noopener noreferrer">Upstream Station (TERI3)</a> |
+                <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer">Downstream Station (RVTI3)</a>
             </p>
-            <p style="margin-top: 10px; font-size: 0.75em; color: #999;">
-                <span class="desktop-version">Desktop v5.2</span>
-                <span class="mobile-version" style="display: none;">Mobile v4.2</span>
+            <p class="footer-divider">• • •</p>
+            <p style="font-size: 0.85em; color: #adb5bd; margin-top: 15px;">
+                River Stage Monitor v6.0 | Data provided for informational purposes only
             </p>
         </footer>
     </div>
@@ -563,14 +537,14 @@
                 displayData();
             } catch (error) {
                 console.error('Error loading data:', error);
-                document.getElementById('riverChart').innerHTML = 
+                document.getElementById('riverChart').innerHTML =
                     '<div class="error">Error loading data. Please try again later.</div>';
             }
         }
 
         function displayData() {
             if (!riverData || !riverData.readings || riverData.readings.length === 0) {
-                document.getElementById('riverChart').innerHTML = 
+                document.getElementById('riverChart').innerHTML =
                     '<div class="error">No data available yet.</div>';
                 return;
             }
@@ -583,7 +557,8 @@
             const latest = riverData.readings[riverData.readings.length - 1];
             const currentStage = latest.riverstage;
 
-            document.getElementById('currentStage').textContent = currentStage.toFixed(2);
+            document.getElementById('currentStage').innerHTML =
+                currentStage.toFixed(2) + '<span class="unit">ft</span>';
 
             const updateTime = new Date(latest.timestamp);
             document.getElementById('lastUpdate').textContent =
@@ -595,12 +570,12 @@
                 });
 
             const card = document.getElementById('currentStageCard');
-            const statusElement = document.getElementById('status');
-            
+            const statusElement = document.getElementById('statusText');
+
             card.classList.remove('warning', 'danger');
 
             if (currentStage >= riverData.flood_stages.near_record) {
-                statusElement.textContent = 'Near Record';
+                statusElement.textContent = 'Near Record Flood';
                 card.classList.add('danger');
             } else if (currentStage >= riverData.flood_stages.major) {
                 statusElement.textContent = 'Major Flooding';
@@ -615,7 +590,7 @@
                 statusElement.textContent = 'Action Stage';
                 card.classList.add('warning');
             } else {
-                statusElement.textContent = 'Normal';
+                statusElement.textContent = 'Normal Conditions';
             }
         }
 
@@ -629,110 +604,99 @@
             const now = new Date();
             const defaultStart = new Date(now.getTime() - (DEFAULT_DAYS * 24 * 60 * 60 * 1000));
 
-            // Calculate Y-axis range based on ALL data (for range slider)
+            // Calculate Y-axis range
             const maxStageInData = Math.max(...stages);
-
-            // Set Y-axis: lower bound always 0, upper bound scales to highest value with padding
             const yMin = 0;
-            const yMax = maxStageInData * 1.1;
+            const yMax = Math.max(maxStageInData * 1.15, riverData.flood_stages.major + 5);
 
-            // Check if mobile
             const isMobile = window.innerWidth <= 768;
 
-            // Get the wrapper width to constrain the chart
-            const chartWrapper = document.querySelector('.chart-wrapper');
-            const chartContainer = document.querySelector('.chart-container');
+            // Create filled areas for flood stages
+            const shapes = [];
 
-            // Log dimensions for debugging
-            console.log('=== VIEWPORT & CONTAINER ===');
-            console.log('Window inner width:', window.innerWidth);
-            console.log('Document body scrollWidth:', document.body.scrollWidth);
-            console.log('Document body offsetWidth:', document.body.offsetWidth);
-            console.log('Container width:', document.querySelector('.container').offsetWidth);
-            console.log('Container scrollWidth:', document.querySelector('.container').scrollWidth);
-            console.log('=== CHART DIMENSIONS ===');
-            console.log('Chart container width:', chartContainer.offsetWidth);
-            console.log('Chart wrapper width:', chartWrapper.offsetWidth);
+            // Background flood zones (filled areas)
+            const floodZones = [
+                { y0: 0, y1: riverData.flood_stages.action, color: 'rgba(76, 175, 80, 0.08)' },
+                { y0: riverData.flood_stages.action, y1: riverData.flood_stages.flood, color: 'rgba(255, 193, 7, 0.12)' },
+                { y0: riverData.flood_stages.flood, y1: riverData.flood_stages.moderate, color: 'rgba(255, 152, 0, 0.15)' },
+                { y0: riverData.flood_stages.moderate, y1: riverData.flood_stages.major, color: 'rgba(255, 87, 34, 0.18)' },
+                { y0: riverData.flood_stages.major, y1: riverData.flood_stages.near_record, color: 'rgba(244, 67, 54, 0.2)' },
+                { y0: riverData.flood_stages.near_record, y1: yMax, color: 'rgba(156, 39, 176, 0.25)' }
+            ];
 
-            // Calculate width properly - wrapper width minus large buffer
-            // Need significant buffer to prevent container expansion
-            const wrapperWidth = chartWrapper.offsetWidth - 200;
-            console.log('Width passed to Plotly:', wrapperWidth);
+            floodZones.forEach(zone => {
+                shapes.push({
+                    type: 'rect',
+                    xref: 'paper',
+                    yref: 'y',
+                    x0: 0,
+                    x1: 1,
+                    y0: zone.y0,
+                    y1: zone.y1,
+                    fillcolor: zone.color,
+                    line: { width: 0 },
+                    layer: 'below'
+                });
+            });
+
+            // Add flood stage lines
+            const stageLines = [
+                { stage: riverData.flood_stages.action, color: '#ffc107', width: 2 },
+                { stage: riverData.flood_stages.flood, color: '#ff9800', width: 2.5 },
+                { stage: riverData.flood_stages.moderate, color: '#ff5722', width: 2.5 },
+                { stage: riverData.flood_stages.major, color: '#f44336', width: 3 },
+                { stage: riverData.flood_stages.near_record, color: '#9c27b0', width: 2.5 }
+            ];
+
+            stageLines.forEach(line => {
+                shapes.push({
+                    type: 'line',
+                    xref: 'paper',
+                    yref: 'y',
+                    x0: 0,
+                    x1: 1,
+                    y0: line.stage,
+                    y1: line.stage,
+                    line: { color: line.color, width: line.width, dash: 'dot' }
+                });
+            });
 
             const trace = {
                 x: timestamps,
                 y: stages,
                 type: 'scatter',
-                mode: 'lines+markers',
+                mode: 'lines',
                 name: 'River Stage',
                 line: {
-                    color: '#3498db',
-                    width: 2
+                    color: '#1976d2',
+                    width: 3,
+                    shape: 'spline'
                 },
-                marker: {
-                    size: 4,
-                    color: '#2980b9'
-                },
-                hovertemplate: '<b>%{x|%Y-%m-%d %H:%M}</b><br>' +
-                               'Stage: %{y:.2f} ft<br>' +
+                fill: 'tozeroy',
+                fillcolor: 'rgba(25, 118, 210, 0.15)',
+                hovertemplate: '<b>%{x|%b %d, %Y %I:%M %p}</b><br>' +
+                               'River Stage: <b>%{y:.2f} ft</b><br>' +
                                '<extra></extra>'
             };
 
-            const shapes = [
-                {
-                    type: 'line',
-                    x0: timestamps[0],
-                    x1: timestamps[timestamps.length - 1],
-                    y0: riverData.flood_stages.action,
-                    y1: riverData.flood_stages.action,
-                    line: { color: '#f1c40f', width: 2, dash: 'dash' }
-                },
-                {
-                    type: 'line',
-                    x0: timestamps[0],
-                    x1: timestamps[timestamps.length - 1],
-                    y0: riverData.flood_stages.flood,
-                    y1: riverData.flood_stages.flood,
-                    line: { color: '#e67e22', width: 2, dash: 'dash' }
-                },
-                {
-                    type: 'line',
-                    x0: timestamps[0],
-                    x1: timestamps[timestamps.length - 1],
-                    y0: riverData.flood_stages.moderate,
-                    y1: riverData.flood_stages.moderate,
-                    line: { color: '#e74c3c', width: 2, dash: 'dash' }
-                },
-                {
-                    type: 'line',
-                    x0: timestamps[0],
-                    x1: timestamps[timestamps.length - 1],
-                    y0: riverData.flood_stages.major,
-                    y1: riverData.flood_stages.major,
-                    line: { color: '#c0392b', width: 2, dash: 'dash' }
-                },
-                {
-                    type: 'line',
-                    x0: timestamps[0],
-                    x1: timestamps[timestamps.length - 1],
-                    y0: riverData.flood_stages.near_record,
-                    y1: riverData.flood_stages.near_record,
-                    line: { color: '#8e44ad', width: 2, dash: 'dash' }
-                }
-            ];
-
             const layout = {
-                width: wrapperWidth,
-                autosize: false,
+                autosize: true,
                 title: {
-                    text: 'Wabash River Stage',
-                    font: { size: isMobile ? 14 : 20 }
+                    text: '',
+                    font: { size: 16 }
                 },
                 xaxis: {
-                    title: isMobile ? '' : 'Date/Time',
+                    title: isMobile ? '' : 'Date and Time',
                     type: 'date',
                     range: [defaultStart, now],
-                    rangeslider: { visible: true },
+                    gridcolor: '#e9ecef',
+                    showgrid: true,
+                    rangeslider: {
+                        visible: true,
+                        bgcolor: '#f8f9fa',
+                        bordercolor: '#d5dde4',
+                        borderwidth: 1
+                    },
                     rangeselector: {
                         visible: !isMobile,
                         buttons: [
@@ -742,105 +706,60 @@
                             { count: 1, label: '1m', step: 'month', stepmode: 'backward' },
                             { step: 'all', label: 'All' }
                         ],
-                        font: { size: 12 },
+                        bgcolor: '#e3f2fd',
+                        activecolor: '#1976d2',
                         x: 0,
                         y: 1.15
                     }
                 },
                 yaxis: {
-                    title: isMobile ? 'Stage (ft)' : 'River Stage (feet)',
-                    zeroline: false,
+                    title: 'River Stage (feet)',
+                    zeroline: true,
+                    zerolinecolor: '#d5dde4',
+                    zerolinewidth: 2,
+                    gridcolor: '#e9ecef',
                     range: [yMin, yMax],
                     autorange: false
                 },
                 shapes: shapes,
-                hovermode: 'closest',
-                showlegend: !isMobile,
-                legend: {
-                    x: 0,
-                    y: 1,
-                    bgcolor: 'rgba(255, 255, 255, 0.8)'
-                },
+                hovermode: 'x unified',
+                showlegend: false,
+                plot_bgcolor: '#ffffff',
+                paper_bgcolor: '#ffffff',
                 margin: isMobile
-                    ? { l: 40, r: 10, t: 40, b: 80 }
-                    : { l: 60, r: 20, t: 60, b: 80 }
+                    ? { l: 50, r: 20, t: 20, b: 80 }
+                    : { l: 70, r: 30, t: 30, b: 80 }
             };
 
             const config = {
-                responsive: false,
+                responsive: true,
                 displayModeBar: !isMobile,
                 displaylogo: false,
-                modeBarButtonsToRemove: ['lasso2d', 'select2d']
+                modeBarButtonsToRemove: ['lasso2d', 'select2d', 'autoScale2d']
             };
 
             Plotly.newPlot('riverChart', [trace], layout, config);
-
-            // Log actual rendered chart width after Plotly creates it
-            setTimeout(function() {
-                console.log('=== AFTER PLOTLY RENDER ===');
-                const plotlyDiv = document.getElementById('riverChart');
-                const svgElement = plotlyDiv.querySelector('.main-svg');
-                if (svgElement) {
-                    console.log('Actual Plotly SVG width:', svgElement.getAttribute('width'));
-                }
-                console.log('RiverChart div offsetWidth:', plotlyDiv.offsetWidth);
-                console.log('RiverChart div scrollWidth:', plotlyDiv.scrollWidth);
-                console.log('Body scrollWidth after render:', document.body.scrollWidth);
-                console.log('Container scrollWidth after render:', document.querySelector('.container').scrollWidth);
-
-                // Check if there's horizontal scroll
-                const hasHorizontalScroll = document.body.scrollWidth > window.innerWidth;
-                console.log('Has horizontal scroll?', hasHorizontalScroll);
-                if (hasHorizontalScroll) {
-                    console.log('⚠️ OVERFLOW BY:', document.body.scrollWidth - window.innerWidth, 'px');
-                }
-
-                // Check container position and visibility
-                const container = document.querySelector('.container');
-                const containerRect = container.getBoundingClientRect();
-                console.log('=== CONTAINER VISIBILITY ===');
-                console.log('Container left edge:', containerRect.left, 'px');
-                console.log('Container right edge:', containerRect.right, 'px');
-                console.log('Viewport width:', window.innerWidth, 'px');
-                console.log('Left visible?', containerRect.left >= 0);
-                console.log('Right visible?', containerRect.right <= window.innerWidth);
-
-                if (containerRect.left < 0) {
-                    console.log('⚠️ LEFT SIDE CUT OFF BY:', Math.abs(containerRect.left), 'px');
-                }
-                if (containerRect.right > window.innerWidth) {
-                    console.log('⚠️ RIGHT SIDE CUT OFF BY:', containerRect.right - window.innerWidth, 'px');
-                }
-            }, 100);
-
-            // Handle window resize - recalculate width
-            let resizeTimeout;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(function() {
-                    // Subtract 200px buffer
-                    const newWrapperWidth = chartWrapper.offsetWidth - 200;
-                    const newIsMobile = window.innerWidth <= 768;
-
-                    Plotly.relayout('riverChart', {
-                        width: newWrapperWidth,
-                        'title.font.size': newIsMobile ? 14 : 20,
-                        'xaxis.title': newIsMobile ? '' : 'Date/Time',
-                        'xaxis.rangeselector.visible': !newIsMobile,
-                        'yaxis.title': newIsMobile ? 'Stage (ft)' : 'River Stage (feet)',
-                        showlegend: !newIsMobile,
-                        margin: newIsMobile
-                            ? { l: 40, r: 10, t: 40, b: 80 }
-                            : { l: 60, r: 20, t: 60, b: 80 }
-                    });
-                }, 250);
-            });
         }
 
         function autoRefresh() {
             loadData();
             setTimeout(autoRefresh, 15 * 60 * 1000);
         }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.nav-tabs a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    // Update active state
+                    document.querySelectorAll('.nav-tabs a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
 
         loadData();
         setTimeout(autoRefresh, 15 * 60 * 1000);

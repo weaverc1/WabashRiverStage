@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 River Stage Data Updater for Wabash River at Hutsonville Bridge
-Updates river stage data from local CSV and pushes to GitHub Pages
+Updates river stage data from local CSV, generates forecast, and pushes to GitHub Pages
 Run this script every 15 minutes via cron/Task Scheduler
 """
 
@@ -109,33 +109,63 @@ def save_data(data, data_file_path):
         print(f"ERROR saving data: {e}")
         return False
 
+def generate_forecast(repo_path):
+    """Generate Hutsonville forecast using NOAA data."""
+    try:
+        # Change to repo directory
+        os.chdir(repo_path)
+
+        # Run the forecast generation script
+        print("\nGenerating Hutsonville forecast...")
+        result = subprocess.run(
+            ['python3', 'generate_hutsonville_forecast.py'],
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+
+        if result.returncode == 0:
+            print("✓ Forecast generated successfully")
+            return True
+        else:
+            print(f"⚠ Forecast generation had issues: {result.stderr}")
+            # Don't fail the whole update if forecast fails
+            return True
+
+    except subprocess.TimeoutExpired:
+        print("⚠ Forecast generation timed out (continuing anyway)")
+        return True
+    except Exception as e:
+        print(f"⚠ Error generating forecast: {e} (continuing anyway)")
+        return True
+
 def git_commit_and_push(repo_path, data_file):
     """Commit changes and push to GitHub."""
     try:
         # Change to repo directory
         os.chdir(repo_path)
-        
+
         # Add the data file
         subprocess.run(['git', 'add', data_file], check=True)
-        
+
         # Check if there are changes to commit
-        result = subprocess.run(['git', 'status', '--porcelain'], 
+        result = subprocess.run(['git', 'status', '--porcelain'],
                               capture_output=True, text=True)
-        
+
         if not result.stdout.strip():
             print("No changes to commit")
             return True
-        
+
         # Commit with timestamp and [skip ci] to avoid triggering GitHub Pages rebuild
         commit_msg = f"Update river stage data - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} [skip ci]"
         subprocess.run(['git', 'commit', '-m', commit_msg], check=True)
-        
+
         # Push to GitHub
         subprocess.run(['git', 'push'], check=True)
-        
+
         print("Successfully pushed to GitHub")
         return True
-        
+
     except subprocess.CalledProcessError as e:
         print(f"ERROR with git operation: {e}")
         return False
@@ -175,9 +205,12 @@ def main():
     if not save_data(updated_data, data_file_path):
         print("Failed to save data. Exiting.")
         sys.exit(1)
-    
+
+    # Generate forecast (using latest observed data)
+    generate_forecast(REPO_PATH)
+
     # Commit and push to GitHub
-    print("Pushing to GitHub...")
+    print("\nPushing to GitHub...")
     if not git_commit_and_push(REPO_PATH, DATA_FILE):
         print("Failed to push to GitHub. Exiting.")
         sys.exit(1)
@@ -186,6 +219,13 @@ def main():
     print("Update completed successfully!")
     print(f"Current river stage: {new_reading['riverstage']} ft")
     print(f"Total readings: {len(updated_data['readings'])}")
+
+    # Show forecast info if available
+    forecast = updated_data.get('forecast', [])
+    if forecast:
+        print(f"Forecast points: {len(forecast)}")
+        print(f"Forecast range: {forecast[0]['riverstage']} ft → {forecast[-1]['riverstage']} ft")
+
     print(f"{'='*60}\n")
 
 if __name__ == "__main__":

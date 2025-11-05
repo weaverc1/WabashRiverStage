@@ -700,12 +700,13 @@
                 });
             });
 
-            const trace = {
+            // Observed data trace
+            const observedTrace = {
                 x: timestamps,
                 y: stages,
                 type: 'scatter',
                 mode: 'lines',
-                name: 'River Stage',
+                name: 'Observed',
                 line: {
                     color: '#1976d2',
                     width: 3,
@@ -717,6 +718,33 @@
                                'River Stage: <b>%{y:.2f} ft</b><br>' +
                                '<extra></extra>'
             };
+
+            const traces = [observedTrace];
+
+            // Add forecast trace if available
+            if (riverData.forecast && riverData.forecast.length > 0) {
+                const forecastTimestamps = riverData.forecast.map(f => new Date(f.timestamp));
+                const forecastStages = riverData.forecast.map(f => f.riverstage);
+
+                const forecastTrace = {
+                    x: forecastTimestamps,
+                    y: forecastStages,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Forecast',
+                    line: {
+                        color: '#ff9800',
+                        width: 3,
+                        dash: 'dash',
+                        shape: 'spline'
+                    },
+                    hovertemplate: '<b>%{x|%b %d, %Y %I:%M %p}</b><br>' +
+                                   'Forecast Stage: <b>%{y:.2f} ft</b><br>' +
+                                   '<extra></extra>'
+                };
+
+                traces.push(forecastTrace);
+            }
 
             const layout = {
                 autosize: true,
@@ -769,7 +797,16 @@
                 },
                 shapes: shapes,
                 hovermode: 'x unified',
-                showlegend: false,
+                showlegend: traces.length > 1,
+                legend: {
+                    x: 0.02,
+                    y: 0.98,
+                    xanchor: 'left',
+                    yanchor: 'top',
+                    bgcolor: 'rgba(255, 255, 255, 0.9)',
+                    bordercolor: '#d5dde4',
+                    borderwidth: 1
+                },
                 plot_bgcolor: '#ffffff',
                 paper_bgcolor: '#ffffff',
                 margin: isMobile
@@ -784,7 +821,7 @@
                 modeBarButtonsToRemove: ['lasso2d', 'select2d', 'autoScale2d']
             };
 
-            Plotly.newPlot('riverChart', [trace], layout, config);
+            Plotly.newPlot('riverChart', traces, layout, config);
 
             // Handle window resize
             let resizeTimeout;

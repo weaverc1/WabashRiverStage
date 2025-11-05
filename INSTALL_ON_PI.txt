@@ -1,0 +1,130 @@
+================================================================================
+STORM3 RECEIVER PI - INSTALLATION INSTRUCTIONS
+================================================================================
+
+Branch: claude/chart-projected-values-011CUq2DURbskKuZE2vCtCzH
+Status: ✅ Ready to pull and install
+
+================================================================================
+STEP-BY-STEP INSTALLATION (5 minutes)
+================================================================================
+
+1. SSH into your Storm3 Receiver Pi
+
+2. Navigate to repository:
+   cd ~/WabashRiverStage
+
+   (or wherever you have the repository cloned)
+
+3. Pull the latest changes:
+   git fetch origin
+   git checkout claude/chart-projected-values-011CUq2DURbskKuZE2vCtCzH
+   git pull origin claude/chart-projected-values-011CUq2DURbskKuZE2vCtCzH
+
+4. Run the setup script:
+   ./setup_noaa_cron.sh
+
+5. Done! The script will:
+   ✓ Create logs directory
+   ✓ Install cron job (runs every 6 hours)
+   ✓ Test the NOAA API connection
+   ✓ Fetch initial forecast data
+   ✓ Show you the schedule
+
+================================================================================
+WHAT YOU'LL GET
+================================================================================
+
+Schedule:       Every 6 hours (12 AM, 6 AM, 12 PM, 6 PM)
+API Calls:      8 per day (very conservative)
+Output File:    data/noaa_forecasts.json (updated automatically)
+Log File:       logs/noaa_fetch.log
+Gauges:         TERI3 (upstream) + RVTI3 (downstream)
+
+================================================================================
+VERIFY IT'S WORKING
+================================================================================
+
+After 6 hours, check:
+
+# See if data is updating
+ls -lh ~/WabashRiverStage/data/noaa_forecasts.json
+
+# View the forecast data
+cat ~/WabashRiverStage/data/noaa_forecasts.json | python3 -m json.tool | less
+
+# Check logs for errors
+tail -f ~/WabashRiverStage/logs/noaa_fetch.log
+
+# View cron schedule
+crontab -l | grep noaa
+
+================================================================================
+HELPFUL COMMANDS
+================================================================================
+
+Manual test run:
+  cd ~/WabashRiverStage && python3 fetch_noaa_forecasts.py
+
+View cron jobs:
+  crontab -l
+
+Edit cron schedule:
+  crontab -e
+
+Watch for updates:
+  watch -n 60 'ls -lh ~/WabashRiverStage/data/noaa_forecasts.json'
+
+================================================================================
+DOCUMENTATION
+================================================================================
+
+Detailed setup:        PI_SETUP.md
+Quick reference:       NOAA_CRON_REFERENCE.md
+Full API docs:         NOAA_INTEGRATION_GUIDE.md
+Quick start:           NOAA_QUICKSTART.md
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+If setup script fails:
+
+1. Check Python 3 is installed:
+   python3 --version
+
+2. Install requests library:
+   pip3 install requests
+
+3. Make script executable:
+   chmod +x ~/WabashRiverStage/fetch_noaa_forecasts.py
+   chmod +x ~/WabashRiverStage/setup_noaa_cron.sh
+
+4. Test API connection:
+   curl https://api.water.noaa.gov/nwps/v1/gauges/TERI3
+
+================================================================================
+SUPPORT
+================================================================================
+
+All files are committed and pushed to:
+  Branch: claude/chart-projected-values-011CUq2DURbskKuZE2vCtCzH
+
+Files you'll get:
+  ✓ fetch_noaa_forecasts.py       - Main script
+  ✓ setup_noaa_cron.sh            - Automated setup
+  ✓ PI_SETUP.md                   - Detailed instructions
+  ✓ NOAA_CRON_REFERENCE.md        - Quick reference
+  ✓ NOAA_INTEGRATION_GUIDE.md     - Complete documentation
+  ✓ forecast_example.html         - Example frontend
+  ✓ verify_installation.sh        - Test script
+
+================================================================================
+READY TO GO!
+================================================================================
+
+Just run: ./setup_noaa_cron.sh
+
+The script handles everything automatically.
+
+================================================================================

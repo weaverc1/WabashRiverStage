@@ -98,6 +98,7 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             max-width: 1000px;
+            margin: 0 auto;
         }
 
         .status-item {
@@ -169,7 +170,14 @@
             border-bottom: 2px solid #d5dde4;
         }
 
+        .chart-wrapper {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
         #riverChart {
+            width: 100%;
             height: 550px;
             background: white;
             border-radius: 4px;
@@ -406,8 +414,8 @@
         <div class="nav-content">
             <a href="#overview" class="active">Overview</a>
             <a href="#data">Data & Graph</a>
-            <a href="#impacts">Flood Impacts</a>
-            <a href="#history">History & Info</a>
+            <a href="#impacts">Flood Stages</a>
+            <a href="#history">Detailed Impacts</a>
         </div>
     </div>
 
@@ -433,7 +441,9 @@
 
         <div class="chart-section" id="data">
             <h2 class="section-title">River Stage Hydrograph</h2>
-            <div id="riverChart" class="loading">Loading hydrograph data...</div>
+            <div class="chart-wrapper">
+                <div id="riverChart" class="loading">Loading hydrograph data...</div>
+            </div>
         </div>
 
         <div class="info-panel" id="impacts">
@@ -463,7 +473,7 @@
         </div>
 
         <div class="info-panel" id="history">
-            <h2 class="section-title">Station Information & Historical Data</h2>
+            <h2 class="section-title">Station Information & Detailed Flood Impacts</h2>
 
             <div class="historical-section">
                 <h3>About This Monitoring Station</h3>
@@ -471,9 +481,37 @@
             </div>
 
             <div class="historical-section">
-                <h3>Notable Flood Events</h3>
-                <p><strong>April 2013 Flood:</strong> During the April 2013 flood event at Hutsonville, significant measurement discrepancies were discovered between readings taken at the State Road 154 bridge and this location. On April 24, the SR 154 readings were nearly 2 feet lower than the Power Plant reading, highlighting the importance of monitoring multiple gauge locations along the river.</p>
-                <p><strong>Data Availability:</strong> Forecasts are issued as needed during times of high water but are not routinely available at this gauge. Detailed stream discharge and gauge height archives from the U.S. Geological Survey are not available for this specific location.</p>
+                <h3>Detailed Flood Impacts by River Stage</h3>
+
+                <p><strong>29.0 feet - Near Record Flooding:</strong> Widespread rural flooding is in progress. Evacuations are necessary behind Island Creek levee in Indiana and in the small Illinois towns of Hutsonville, York, and Darwin. Water is at the top of most agricultural levees. Many local river roads are extensively flooded. A 5 mile drive from Hutsonville to Grayville across the Wabash is now a 70 mile trip.</p>
+
+                <p><strong>28.1 feet:</strong> At this level or slightly above SR 154 is closed to prevent shaking of nearby Island Creek Levee.</p>
+
+                <p><strong>28.0 feet - Major Flood Stage:</strong> Widespread rural flooding is in progress. All river roads are impassable, some by several feet of water. Evacuations are necessary in the small Illinois towns of Hutsonville, Darwin and eastern portion of York. Evacuations may also be necessary for those couple of families behind Island levee in Indiana. Water is at the top of most agricultural levees.</p>
+
+                <p><strong>27.0 feet:</strong> Island Creek Levee on Indiana side is in danger of failing. There are 2 farms on higher ground in protected area. A few evacuations in Illinois towns of Hutsonville, York, and possibly Darwin are necessary. Local improved road south of Hutsonville to Palestine is impassable. Flood water affecting south and northeast residential areas of Hutsonville.</p>
+
+                <p><strong>26.0 feet:</strong> Island Creek Levee on Indiana side is in danger of failing. There are 2 farms on higher ground in protected area. A few evacuations are necessary in Illinois towns of Hutsonville, York, and possibly Darwin. Local improved road south of Hutsonville to Palestine floods extensively in places.</p>
+
+                <p><strong>25.0 feet:</strong> Extensive flooding is in progress in York and Hutsonville, Illinois. Flood waters surround homes and are in a local park. Local river road south of Hutsonville to Palestine almost floods.</p>
+
+                <p><strong>24.0 feet - Moderate Flood Stage:</strong> Extensive flooding is in progress. Rural roads in eastern Clark and Crawford counties in Illinois are impassible. A few mobile home residences and area along Hutson Creek just south of Hutsonville flood. Flood is at critical level for most of levees. Extensive seep water is behind levees. Water surrounds residential areas of Riverton, Riverview, Hutsonville and eastern York.</p>
+
+                <p><strong>23.8 feet:</strong> Ball field in Hutsonville is extensively flooded. Blacktop road that runs along the Wabash River from Hutsonville to Palestine is still above flood waters. Most all of the roads leading from this road to the Wabash are underwater, some by several feet of water.</p>
+
+                <p><strong>22.9 feet:</strong> Extensive backwater flooding of Hutson Creek affecting residential property on the south side of Hutsonville. Flood waters near the intersection of N. Main and E. Mechanic St on the northeast side of Hutsonville. RVs and campers located along the river just south of Hutsonville moved to higher ground.</p>
+
+                <p><strong>22.8 feet:</strong> Flooding extends to what is locally called River Road in several areas. River Road is the rural way south from Hutsonville to Palestine. Flooding in this area affects large expanses of agricultural land, river cabins and hunting areas on both sides of the river. Most local, unimproved roads leading towards the river are flooded. These roads led to farms, river cabins, private residences, levees and a few oil wells.</p>
+
+                <p><strong>22.0 feet:</strong> River cabins become isolated. Basement flooding begins in Hutsonville. Extensive agricultural flooding is in progress. Higher Illinois rural roads in eastern Clark and Crawford counties flood.</p>
+
+                <p><strong>20.0 feet:</strong> Leaverton Park in Palestine and park in Hutsonville begin to flood. Agricultural flooding spreads to higher land. Seep water is noticeable behind levees. Some elevated river cottages are surrounded by water. Several county or township roads east of Lincoln Heritage Trail between Palestine and Hutsonville in Crawford County Illinois are impassable.</p>
+
+                <p><strong>18.0 feet:</strong> Seep water occurs behind levees on Indiana side. Hutson Creek begins to overflow from backwater. Old Darwin Road and a few rural roads in eastern Clark and Crawford counties in Illinois are impassable. Low agricultural land floods.</p>
+
+                <p><strong>16.0 feet - Minor Flood Stage:</strong> Old Darwin Road and a few low rural roads between York and Hutsonville, Illinois begin to flood. Agricultural flooding begins along portions of the river.</p>
+
+                <p><strong>14.0 feet:</strong> Flooding of lowest agricultural lands begins in eastern Clark and Crawford counties in Illinois.</p>
             </div>
         </div>
 
@@ -691,6 +729,7 @@
                     range: [defaultStart, now],
                     gridcolor: '#e9ecef',
                     showgrid: true,
+                    fixedrange: false,
                     rangeslider: {
                         visible: true,
                         bgcolor: '#f8f9fa',
@@ -719,7 +758,8 @@
                     zerolinewidth: 2,
                     gridcolor: '#e9ecef',
                     range: [yMin, yMax],
-                    autorange: false
+                    autorange: false,
+                    fixedrange: false
                 },
                 shapes: shapes,
                 hovermode: 'x unified',
@@ -739,6 +779,15 @@
             };
 
             Plotly.newPlot('riverChart', [trace], layout, config);
+
+            // Handle window resize
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    Plotly.Plots.resize('riverChart');
+                }, 250);
+            });
         }
 
         function autoRefresh() {

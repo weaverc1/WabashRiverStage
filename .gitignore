@@ -1,6 +1,7 @@
 # Logs
 *.log
 update.log
+logs/*.log
 
 # Python
 __pycache__/

@@ -178,7 +178,7 @@
 
         #riverChart {
             width: 100%;
-            height: 600px;
+            height: 700px;
             background: white;
             border-radius: 4px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.08);
@@ -376,7 +376,7 @@
             }
 
             #riverChart {
-                height: 400px;
+                height: 500px;
             }
 
             .info-panel {
@@ -724,17 +724,22 @@
                     font: { size: 16 }
                 },
                 xaxis: {
-                    title: isMobile ? '' : 'Date and Time',
+                    title: '',
                     type: 'date',
                     range: [defaultStart, now],
                     gridcolor: '#e9ecef',
                     showgrid: true,
                     fixedrange: false,
+                    showticklabels: true,
                     rangeslider: {
                         visible: true,
                         bgcolor: '#f8f9fa',
                         bordercolor: '#d5dde4',
-                        borderwidth: 1
+                        borderwidth: 1,
+                        thickness: 0.15,
+                        yaxis: {
+                            rangemode: 'match'
+                        }
                     },
                     rangeselector: {
                         visible: !isMobile,
@@ -767,8 +772,8 @@
                 plot_bgcolor: '#ffffff',
                 paper_bgcolor: '#ffffff',
                 margin: isMobile
-                    ? { l: 50, r: 20, t: 20, b: 120 }
-                    : { l: 70, r: 30, t: 30, b: 130 }
+                    ? { l: 50, r: 20, t: 20, b: 140 }
+                    : { l: 70, r: 30, t: 30, b: 150 }
             };
 
             const config = {

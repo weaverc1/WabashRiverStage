@@ -24143,6 +24143,12 @@
   ],
   "forecast": [
     {
+      "timestamp": "2025-11-05T13:08:31.106429",
+      "riverstage": 3.876,
+      "date_display": "2025-11-05 13:08:31",
+      "is_forecast": true
+    },
+    {
       "timestamp": "2025-11-05T19:08:31.106429",
       "riverstage": 3.86,
       "date_display": "2025-11-05 19:08:31",
@@ -24263,6 +24269,6 @@
       "is_forecast": true
     }
   ],
-  "forecast_generated": "2025-11-05T21:09:03.351708",
+  "forecast_generated": "2025-11-05T21:32:05.357538",
   "forecast_method": "Interpolation from TERI3/RVTI3 NOAA forecasts"
 }

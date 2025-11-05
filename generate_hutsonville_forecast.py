@@ -126,6 +126,16 @@ def generate_forecast_points(noaa_data: Dict, current_time: datetime,
 
     print(f"   Forecasted peak: {peak_stage} ft at {hutsonville_peak_time.strftime('%Y-%m-%d %H:%M')}")
 
+    # Add initial forecast point at current time for seamless transition
+    # This eliminates visual gap on chart
+    current_time_naive = current_time.replace(tzinfo=None)
+    forecasts.append({
+        'timestamp': current_time_naive.isoformat(),
+        'riverstage': current_hutsonville_stage,
+        'date_display': current_time_naive.strftime('%Y-%m-%d %H:%M:%S'),
+        'is_forecast': True
+    })
+
     # Generate forecast points every 6 hours for better continuity
     for hours in range(6, num_hours + 1, 6):
         forecast_time = current_time + timedelta(hours=hours)

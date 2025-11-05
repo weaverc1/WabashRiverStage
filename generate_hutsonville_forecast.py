@@ -72,6 +72,7 @@ def estimate_hutsonville_stage(teri3_stage: float, rvti3_stage: float,
 
 
 def generate_forecast_points(noaa_data: Dict, current_time: datetime,
+                             current_hutsonville_stage: float,
                              num_hours: int = 120) -> List[Dict]:
     """
     Generate forecast data points for Hutsonville.
@@ -79,6 +80,7 @@ def generate_forecast_points(noaa_data: Dict, current_time: datetime,
     Args:
         noaa_data: NOAA forecast data from noaa_forecasts.json
         current_time: Current timestamp
+        current_hutsonville_stage: Current observed Hutsonville stage
         num_hours: Number of hours to forecast (default 120 = 5 days)
 
     Returns:
@@ -119,8 +121,10 @@ def generate_forecast_points(noaa_data: Dict, current_time: datetime,
     # Hutsonville is between the two gauges
     hutsonville_peak_time = teri3_forecast_time + timedelta(hours=TERI3_TO_HUTSONVILLE_LAG_HOURS)
 
-    # Estimate current Hutsonville stage
-    current_hutsonville_stage = estimate_hutsonville_stage(teri3_current, rvti3_current)
+    # Estimate peak Hutsonville stage based on upstream/downstream forecasts
+    peak_stage = estimate_hutsonville_stage(teri3_forecast, rvti3_forecast)
+
+    print(f"   Forecasted peak: {peak_stage} ft at {hutsonville_peak_time.strftime('%Y-%m-%d %H:%M')}")
 
     # Generate forecast points every 6 hours for better continuity
     for hours in range(6, num_hours + 1, 6):
@@ -128,20 +132,15 @@ def generate_forecast_points(noaa_data: Dict, current_time: datetime,
 
         # Calculate stage based on position in forecast timeline
         if forecast_time < hutsonville_peak_time:
-            # Rising stage - interpolate from current to peak
+            # Rising stage - interpolate from CURRENT OBSERVED to peak
             time_to_peak = (hutsonville_peak_time - current_time).total_seconds()
             time_elapsed = (forecast_time - current_time).total_seconds()
             progress = min(1.0, time_elapsed / time_to_peak) if time_to_peak > 0 else 1.0
 
-            # Estimate peak Hutsonville stage
-            peak_stage = estimate_hutsonville_stage(teri3_forecast, rvti3_forecast)
-
-            # Interpolate from current to peak
+            # Interpolate from current observed stage to forecasted peak
             forecast_stage = current_hutsonville_stage + (peak_stage - current_hutsonville_stage) * progress
         else:
             # At or past peak - use peak or slight decline
-            peak_stage = estimate_hutsonville_stage(teri3_forecast, rvti3_forecast)
-
             # Apply slight recession after peak
             hours_after_peak = (forecast_time - hutsonville_peak_time).total_seconds() / 3600
             recession_factor = 0.99 ** (hours_after_peak / 6)  # ~1% decline per 6 hours
@@ -196,11 +195,13 @@ def main():
     if current_time.tzinfo is None:
         current_time = current_time.replace(tzinfo=timezone.utc)
 
-    print(f"   ✓ Latest reading: {latest_reading['date_display']} ({latest_reading['riverstage']} ft)")
+    current_stage = latest_reading['riverstage']
+    print(f"   ✓ Latest reading: {latest_reading['date_display']} ({current_stage} ft)")
 
     # Generate forecast
     print("\n3. Generating Hutsonville forecast...")
-    forecast_points = generate_forecast_points(noaa_data, current_time, num_hours=120)
+    print(f"   Starting from current stage: {current_stage} ft")
+    forecast_points = generate_forecast_points(noaa_data, current_time, current_stage, num_hours=120)
 
     if not forecast_points:
         print("Error: Could not generate forecast")

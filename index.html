@@ -440,63 +440,6 @@
             </div>
         </div>
 
-        <div class="info-panel" id="forecast-section" style="display: none; padding: 25px 30px; background: #e3f2fd; border-bottom: 1px solid #d5dde4;">
-            <h2 class="section-title" style="color: #1e5a8e; margin-bottom: 20px;">River Forecast - Related Monitoring Stations</h2>
-            <div class="status-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; max-width: 100%;">
-                <!-- Upstream Gauge (TERI3) -->
-                <div class="status-item" style="text-align: left; border-left: 4px solid #2196F3;">
-                    <div class="label" style="font-size: 0.75em;">UPSTREAM - TERRE HAUTE</div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
-                        <div>
-                            <div style="font-size: 0.75em; color: #6c757d; margin-bottom: 5px;">Current</div>
-                            <div class="value" style="font-size: 2em;" id="teri3-current">--</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 0.75em; color: #6c757d; margin-bottom: 5px;">Forecast</div>
-                            <div class="value" style="font-size: 2em; color: #1976d2;" id="teri3-forecast">--</div>
-                        </div>
-                    </div>
-                    <div class="subtext" style="margin-top: 10px; font-size: 0.8em;" id="teri3-time">--</div>
-                </div>
-
-                <!-- Downstream Gauge (RVTI3) -->
-                <div class="status-item" style="text-align: left; border-left: 4px solid #00BCD4;">
-                    <div class="label" style="font-size: 0.75em;">DOWNSTREAM - RIVERTON</div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px;">
-                        <div>
-                            <div style="font-size: 0.75em; color: #6c757d; margin-bottom: 5px;">Current</div>
-                            <div class="value" style="font-size: 2em;" id="rvti3-current">--</div>
-                        </div>
-                        <div>
-                            <div style="font-size: 0.75em; color: #6c757d; margin-bottom: 5px;">Forecast</div>
-                            <div class="value" style="font-size: 2em; color: #0097a7;" id="rvti3-forecast">--</div>
-                        </div>
-                    </div>
-                    <div class="subtext" style="margin-top: 10px; font-size: 0.8em;" id="rvti3-time">--</div>
-                </div>
-
-                <!-- Long Range Outlook -->
-                <div class="status-item" style="text-align: left; border-left: 4px solid #9C27B0;">
-                    <div class="label" style="font-size: 0.75em;">LONG RANGE OUTLOOK (3-MONTH)</div>
-                    <div style="margin-top: 10px;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="font-size: 0.8em; color: #6c757d;">Minor Flood:</span>
-                            <span style="font-size: 0.9em; font-weight: 600; color: #ff9800;" id="lro-minor">--</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                            <span style="font-size: 0.8em; color: #6c757d;">Moderate Flood:</span>
-                            <span style="font-size: 0.9em; font-weight: 600; color: #ff5722;" id="lro-moderate">--</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="font-size: 0.8em; color: #6c757d;">Major Flood:</span>
-                            <span style="font-size: 0.9em; font-weight: 600; color: #f44336;" id="lro-major">--</span>
-                        </div>
-                    </div>
-                    <div class="subtext" style="margin-top: 10px; font-size: 0.75em;" id="lro-period">--</div>
-                </div>
-            </div>
-        </div>
-
         <div class="chart-section" id="data">
             <h2 class="section-title">River Stage Hydrograph</h2>
             <div class="chart-wrapper">
@@ -617,36 +560,19 @@
     <script>
         // Configuration
         const DATA_URL = 'data/river_data.json';
-        const FORECAST_URL = 'data/noaa_forecasts.json';
         const DEFAULT_DAYS = 7;
 
         // Global data store
         let riverData = null;
-        let forecastData = null;
 
         // Fetch and display data
         async function loadData() {
             try {
-                // Load both river data and forecast data
-                const [riverResponse, forecastResponse] = await Promise.all([
-                    fetch(DATA_URL),
-                    fetch(FORECAST_URL)
-                ]);
-
-                if (!riverResponse.ok) {
-                    throw new Error(`HTTP error loading river data! status: ${riverResponse.status}`);
+                const response = await fetch(DATA_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-
-                riverData = await riverResponse.json();
-
-                // Forecast data is optional - don't fail if it's not available
-                if (forecastResponse.ok) {
-                    forecastData = await forecastResponse.json();
-                } else {
-                    console.warn('Forecast data not available');
-                    forecastData = null;
-                }
-
+                riverData = await response.json();
                 displayData();
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -663,7 +589,6 @@
             }
 
             updateCurrentStatus();
-            updateForecastDisplay();
             createChart();
         }
 
@@ -706,78 +631,6 @@
             } else {
                 statusElement.textContent = 'Normal Conditions';
             }
-        }
-
-        function updateForecastDisplay() {
-            // If no forecast data, hide the section
-            if (!forecastData || !forecastData.gauges) {
-                document.getElementById('forecast-section').style.display = 'none';
-                return;
-            }
-
-            // Show the forecast section
-            document.getElementById('forecast-section').style.display = 'block';
-
-            // Update TERI3 (Upstream)
-            const teri3 = forecastData.gauges.TERI3;
-            if (teri3) {
-                document.getElementById('teri3-current').innerHTML =
-                    teri3.observed.stage + '<span class="unit">ft</span>';
-                document.getElementById('teri3-forecast').innerHTML =
-                    teri3.forecast.stage + '<span class="unit">ft</span>';
-
-                const forecastDate = new Date(teri3.forecast.timestamp);
-                document.getElementById('teri3-time').textContent =
-                    'Peak forecast: ' + forecastDate.toLocaleString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: 'numeric',
-                        minute: '2-digit'
-                    });
-            }
-
-            // Update RVTI3 (Downstream)
-            const rvti3 = forecastData.gauges.RVTI3;
-            if (rvti3) {
-                document.getElementById('rvti3-current').innerHTML =
-                    rvti3.observed.stage + '<span class="unit">ft</span>';
-                document.getElementById('rvti3-forecast').innerHTML =
-                    rvti3.forecast.stage + '<span class="unit">ft</span>';
-
-                const forecastDate = new Date(rvti3.forecast.timestamp);
-                document.getElementById('rvti3-time').textContent =
-                    'Peak forecast: ' + forecastDate.toLocaleString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: 'numeric',
-                        minute: '2-digit'
-                    });
-            }
-
-            // Update Long Range Outlook (use RVTI3 as it's closer to our site)
-            if (rvti3 && rvti3.long_range_outlook) {
-                const lro = rvti3.long_range_outlook;
-                document.getElementById('lro-minor').textContent =
-                    formatProbability(lro.minor_flood_chance);
-                document.getElementById('lro-moderate').textContent =
-                    formatProbability(lro.moderate_flood_chance);
-                document.getElementById('lro-major').textContent =
-                    formatProbability(lro.major_flood_chance);
-                document.getElementById('lro-period').textContent =
-                    'Outlook period: ' + (lro.interval_display || 'N/A');
-            }
-        }
-
-        function formatProbability(prob) {
-            if (!prob || prob === 'N/A') return 'N/A';
-            // Handle "< 0.05" format
-            if (typeof prob === 'string' && prob.includes('<')) {
-                return prob;
-            }
-            // Convert decimal to percentage
-            const numProb = parseFloat(prob);
-            if (isNaN(numProb)) return prob;
-            return (numProb * 100).toFixed(0) + '%';
         }
 
         function createChart() {
@@ -847,12 +700,13 @@
                 });
             });
 
-            const trace = {
+            // Observed data trace
+            const observedTrace = {
                 x: timestamps,
                 y: stages,
                 type: 'scatter',
                 mode: 'lines',
-                name: 'Observed Stage',
+                name: 'Observed',
                 line: {
                     color: '#1976d2',
                     width: 3,
@@ -865,96 +719,31 @@
                                '<extra></extra>'
             };
 
-            const traces = [trace];
+            const traces = [observedTrace];
 
-            // Add forecast peak markers if available
-            const annotations = [];
-            if (forecastData && forecastData.gauges) {
-                // TERI3 (Upstream) forecast marker
-                const teri3 = forecastData.gauges.TERI3;
-                if (teri3 && teri3.forecast && teri3.forecast.stage) {
-                    const teri3ForecastDate = new Date(teri3.forecast.timestamp);
-                    traces.push({
-                        x: [teri3ForecastDate],
-                        y: [teri3.forecast.stage],
-                        type: 'scatter',
-                        mode: 'markers',
-                        name: 'Upstream Forecast (TERI3)',
-                        marker: {
-                            color: '#2196F3',
-                            size: 12,
-                            symbol: 'triangle-up',
-                            line: { color: '#0D47A1', width: 2 }
-                        },
-                        hovertemplate: '<b>Upstream Forecast (TERI3)</b><br>' +
-                                       '%{x|%b %d, %Y %I:%M %p}<br>' +
-                                       'Stage: <b>%{y:.2f} ft</b><br>' +
-                                       '<extra></extra>'
-                    });
+            // Add forecast trace if available
+            if (riverData.forecast && riverData.forecast.length > 0) {
+                const forecastTimestamps = riverData.forecast.map(f => new Date(f.timestamp));
+                const forecastStages = riverData.forecast.map(f => f.riverstage);
 
-                    annotations.push({
-                        x: teri3ForecastDate,
-                        y: teri3.forecast.stage,
-                        xref: 'x',
-                        yref: 'y',
-                        text: 'TERI3: ' + teri3.forecast.stage + ' ft',
-                        showarrow: true,
-                        arrowhead: 2,
-                        arrowsize: 1,
-                        arrowwidth: 2,
-                        arrowcolor: '#2196F3',
-                        ax: 30,
-                        ay: -40,
-                        font: { size: 11, color: '#2196F3', family: 'Arial, sans-serif' },
-                        bgcolor: 'rgba(255, 255, 255, 0.9)',
-                        bordercolor: '#2196F3',
-                        borderwidth: 1,
-                        borderpad: 4
-                    });
-                }
+                const forecastTrace = {
+                    x: forecastTimestamps,
+                    y: forecastStages,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Forecast',
+                    line: {
+                        color: '#ff9800',
+                        width: 3,
+                        dash: 'dash',
+                        shape: 'spline'
+                    },
+                    hovertemplate: '<b>%{x|%b %d, %Y %I:%M %p}</b><br>' +
+                                   'Forecast Stage: <b>%{y:.2f} ft</b><br>' +
+                                   '<extra></extra>'
+                };
 
-                // RVTI3 (Downstream) forecast marker
-                const rvti3 = forecastData.gauges.RVTI3;
-                if (rvti3 && rvti3.forecast && rvti3.forecast.stage) {
-                    const rvti3ForecastDate = new Date(rvti3.forecast.timestamp);
-                    traces.push({
-                        x: [rvti3ForecastDate],
-                        y: [rvti3.forecast.stage],
-                        type: 'scatter',
-                        mode: 'markers',
-                        name: 'Downstream Forecast (RVTI3)',
-                        marker: {
-                            color: '#00BCD4',
-                            size: 12,
-                            symbol: 'triangle-down',
-                            line: { color: '#006064', width: 2 }
-                        },
-                        hovertemplate: '<b>Downstream Forecast (RVTI3)</b><br>' +
-                                       '%{x|%b %d, %Y %I:%M %p}<br>' +
-                                       'Stage: <b>%{y:.2f} ft</b><br>' +
-                                       '<extra></extra>'
-                    });
-
-                    annotations.push({
-                        x: rvti3ForecastDate,
-                        y: rvti3.forecast.stage,
-                        xref: 'x',
-                        yref: 'y',
-                        text: 'RVTI3: ' + rvti3.forecast.stage + ' ft',
-                        showarrow: true,
-                        arrowhead: 2,
-                        arrowsize: 1,
-                        arrowwidth: 2,
-                        arrowcolor: '#00BCD4',
-                        ax: -30,
-                        ay: -40,
-                        font: { size: 11, color: '#00BCD4', family: 'Arial, sans-serif' },
-                        bgcolor: 'rgba(255, 255, 255, 0.9)',
-                        bordercolor: '#00BCD4',
-                        borderwidth: 1,
-                        borderpad: 4
-                    });
-                }
+                traces.push(forecastTrace);
             }
 
             const layout = {
@@ -1007,15 +796,13 @@
                     fixedrange: false
                 },
                 shapes: shapes,
-                annotations: annotations,
-                hovermode: 'closest',
+                hovermode: 'x unified',
                 showlegend: traces.length > 1,
                 legend: {
-                    x: 0,
-                    y: 1.1,
+                    x: 0.02,
+                    y: 0.98,
                     xanchor: 'left',
                     yanchor: 'top',
-                    orientation: 'h',
                     bgcolor: 'rgba(255, 255, 255, 0.9)',
                     bordercolor: '#d5dde4',
                     borderwidth: 1
@@ -1024,7 +811,7 @@
                 paper_bgcolor: '#ffffff',
                 margin: isMobile
                     ? { l: 50, r: 20, t: 20, b: 140 }
-                    : { l: 70, r: 30, t: 50, b: 150 }
+                    : { l: 70, r: 30, t: 30, b: 150 }
             };
 
             const config = {

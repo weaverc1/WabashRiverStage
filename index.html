@@ -433,6 +433,11 @@
                     <div class="value">16.0<span class="unit">ft</span></div>
                     <div class="subtext">Minor Flooding</div>
                 </div>
+                <div class="status-item" id="forecastCrestCard" style="display: none;">
+                    <div class="label">Forecasted Crest</div>
+                    <div class="value" id="forecastCrestStage">--</div>
+                    <div class="subtext" id="forecastCrestTime">--</div>
+                </div>
                 <div class="status-item">
                     <div class="label">Last Updated</div>
                     <div class="value" style="font-size: 1.2em; padding-top: 10px;" id="lastUpdate">--</div>
@@ -592,6 +597,28 @@
             createChart();
         }
 
+        function findForecastPeak() {
+            if (!riverData.forecast || riverData.forecast.length === 0) {
+                return null;
+            }
+
+            let peakIndex = 0;
+            let peakStage = riverData.forecast[0].riverstage;
+
+            for (let i = 1; i < riverData.forecast.length; i++) {
+                if (riverData.forecast[i].riverstage > peakStage) {
+                    peakStage = riverData.forecast[i].riverstage;
+                    peakIndex = i;
+                }
+            }
+
+            return {
+                stage: peakStage,
+                timestamp: riverData.forecast[peakIndex].timestamp,
+                index: peakIndex
+            };
+        }
+
         function updateCurrentStatus() {
             const latest = riverData.readings[riverData.readings.length - 1];
             const currentStage = latest.riverstage;
@@ -630,6 +657,38 @@
                 card.classList.add('warning');
             } else {
                 statusElement.textContent = 'Normal Conditions';
+            }
+
+            // Update forecasted crest if available
+            const forecastPeak = findForecastPeak();
+            const forecastCard = document.getElementById('forecastCrestCard');
+
+            if (forecastPeak) {
+                const crestTime = new Date(forecastPeak.timestamp);
+                const crestStage = forecastPeak.stage;
+
+                document.getElementById('forecastCrestStage').innerHTML =
+                    crestStage.toFixed(2) + '<span class="unit">ft</span>';
+
+                document.getElementById('forecastCrestTime').textContent =
+                    crestTime.toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit'
+                    });
+
+                // Apply warning/danger styling based on crest stage
+                forecastCard.classList.remove('warning', 'danger');
+                if (crestStage >= riverData.flood_stages.flood) {
+                    forecastCard.classList.add('danger');
+                } else if (crestStage >= riverData.flood_stages.action) {
+                    forecastCard.classList.add('warning');
+                }
+
+                forecastCard.style.display = '';
+            } else {
+                forecastCard.style.display = 'none';
             }
         }
 
@@ -728,6 +787,7 @@
             const traces = [observedTrace];
 
             // Add forecast trace if available
+            let forecastPeakData = null;
             if (riverData.forecast && riverData.forecast.length > 0) {
                 const forecastTimestamps = riverData.forecast.map(f => new Date(f.timestamp));
                 const forecastStages = riverData.forecast.map(f => f.riverstage);
@@ -750,6 +810,63 @@
                 };
 
                 traces.push(forecastTrace);
+
+                // Add forecasted crest marker
+                const forecastPeak = findForecastPeak();
+                if (forecastPeak) {
+                    forecastPeakData = forecastPeak;
+                    const peakMarker = {
+                        x: [new Date(forecastPeak.timestamp)],
+                        y: [forecastPeak.stage],
+                        type: 'scatter',
+                        mode: 'markers',
+                        name: 'Forecasted Crest',
+                        marker: {
+                            color: '#d32f2f',
+                            size: 14,
+                            symbol: 'diamond',
+                            line: {
+                                color: '#ffffff',
+                                width: 2
+                            }
+                        },
+                        hovertemplate: '<b>Forecasted Crest</b><br>' +
+                                       '%{x|%b %d, %Y %I:%M %p}<br>' +
+                                       'Stage: <b>%{y:.2f} ft</b><br>' +
+                                       '<extra></extra>'
+                    };
+
+                    traces.push(peakMarker);
+                }
+            }
+
+            // Add annotation for forecasted crest
+            const annotations = [];
+            if (forecastPeakData) {
+                annotations.push({
+                    x: new Date(forecastPeakData.timestamp),
+                    y: forecastPeakData.stage,
+                    xref: 'x',
+                    yref: 'y',
+                    text: `Crest: ${forecastPeakData.stage.toFixed(2)} ft`,
+                    showarrow: true,
+                    arrowhead: 2,
+                    arrowsize: 1,
+                    arrowwidth: 2,
+                    arrowcolor: '#d32f2f',
+                    ax: 0,
+                    ay: -40,
+                    bgcolor: 'rgba(255, 255, 255, 0.95)',
+                    bordercolor: '#d32f2f',
+                    borderwidth: 2,
+                    borderpad: 6,
+                    font: {
+                        size: 13,
+                        color: '#d32f2f',
+                        family: 'Segoe UI, Arial, sans-serif',
+                        weight: 600
+                    }
+                });
             }
 
             const layout = {
@@ -758,6 +875,7 @@
                     text: '',
                     font: { size: 16 }
                 },
+                annotations: annotations,
                 xaxis: {
                     title: '',
                     type: 'date',

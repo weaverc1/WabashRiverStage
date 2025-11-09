@@ -708,10 +708,10 @@
 
             const now = new Date();
 
-            // Center the chart on current time
-            // Show 2.5 days of history and 2.5 days of forecast
-            const daysBeforeNow = 2.5;
-            const daysAfterNow = 2.5;
+            // Set chart window to 66% historical data, 33% forecast
+            // Show 4 days of history and 2 days of forecast
+            const daysBeforeNow = 4;
+            const daysAfterNow = 2;
             const defaultStart = new Date(now.getTime() - (daysBeforeNow * 24 * 60 * 60 * 1000));
             const defaultEnd = new Date(now.getTime() + (daysAfterNow * 24 * 60 * 60 * 1000));
 

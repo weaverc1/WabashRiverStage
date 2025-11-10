@@ -610,17 +610,10 @@
         }
 
         function separateActualAndForecast() {
-            // Separate actual readings from forecast data
-            const actualReadings = [];
-            const forecastReadings = [];
-
-            for (const reading of riverData.readings) {
-                if (reading.is_forecast) {
-                    forecastReadings.push(reading);
-                } else {
-                    actualReadings.push(reading);
-                }
-            }
+            // Actual readings are in riverData.readings
+            // Forecast data is in riverData.forecast (separate array)
+            const actualReadings = riverData.readings || [];
+            const forecastReadings = riverData.forecast || [];
 
             return { actualReadings, forecastReadings };
         }

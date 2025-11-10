@@ -682,34 +682,41 @@
                 statusElement.textContent = 'Normal Conditions';
             }
 
-            // Update forecasted crest if available
+            // Update forecasted crest if available and at least 4 hours away
             const forecastPeak = findForecastPeak(forecastReadings);
             const forecastCard = document.getElementById('forecastCrestCard');
 
             if (forecastPeak) {
                 const crestTime = new Date(forecastPeak.timestamp);
                 const crestStage = forecastPeak.stage;
+                const nowTime = new Date(latest.timestamp);
+                const hoursUntilPeak = (crestTime - nowTime) / (1000 * 60 * 60);
 
-                document.getElementById('forecastCrestStage').innerHTML =
-                    crestStage.toFixed(2) + '<span class="unit">ft</span>';
+                // Only show crest card if it's at least 4 hours in the future
+                if (hoursUntilPeak >= 4) {
+                    document.getElementById('forecastCrestStage').innerHTML =
+                        crestStage.toFixed(2) + '<span class="unit">ft</span>';
 
-                document.getElementById('forecastCrestTime').textContent =
-                    crestTime.toLocaleString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: 'numeric',
-                        minute: '2-digit'
-                    });
+                    document.getElementById('forecastCrestTime').textContent =
+                        crestTime.toLocaleString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit'
+                        });
 
-                // Apply warning/danger styling based on crest stage
-                forecastCard.classList.remove('warning', 'danger');
-                if (crestStage >= riverData.flood_stages.flood) {
-                    forecastCard.classList.add('danger');
-                } else if (crestStage >= riverData.flood_stages.action) {
-                    forecastCard.classList.add('warning');
+                    // Apply warning/danger styling based on crest stage
+                    forecastCard.classList.remove('warning', 'danger');
+                    if (crestStage >= riverData.flood_stages.flood) {
+                        forecastCard.classList.add('danger');
+                    } else if (crestStage >= riverData.flood_stages.action) {
+                        forecastCard.classList.add('warning');
+                    }
+
+                    forecastCard.style.display = '';
+                } else {
+                    forecastCard.style.display = 'none';
                 }
-
-                forecastCard.style.display = '';
             } else {
                 forecastCard.style.display = 'none';
             }
@@ -843,32 +850,38 @@
 
                 traces.push(forecastTrace);
 
-                // Add forecasted crest marker
+                // Add forecasted crest marker only if it's at least 4 hours away
                 const forecastPeak = findForecastPeak(forecastReadings);
                 if (forecastPeak) {
-                    forecastPeakData = forecastPeak;
-                    const peakMarker = {
-                        x: [new Date(forecastPeak.timestamp)],
-                        y: [forecastPeak.stage],
-                        type: 'scatter',
-                        mode: 'markers',
-                        name: 'Forecasted Crest',
-                        marker: {
-                            color: '#d32f2f',
-                            size: 14,
-                            symbol: 'diamond',
-                            line: {
-                                color: '#ffffff',
-                                width: 2
-                            }
-                        },
-                        hovertemplate: '<b>Forecasted Crest</b><br>' +
-                                       '%{x|%b %d, %Y %I:%M %p}<br>' +
-                                       'Stage: <b>%{y:.2f} ft</b><br>' +
-                                       '<extra></extra>'
-                    };
+                    const peakTime = new Date(forecastPeak.timestamp);
+                    const hoursUntilPeak = (peakTime - now) / (1000 * 60 * 60);
 
-                    traces.push(peakMarker);
+                    // Only show crest if it's at least 4 hours in the future
+                    if (hoursUntilPeak >= 4) {
+                        forecastPeakData = forecastPeak;
+                        const peakMarker = {
+                            x: [peakTime],
+                            y: [forecastPeak.stage],
+                            type: 'scatter',
+                            mode: 'markers',
+                            name: 'Forecasted Crest',
+                            marker: {
+                                color: '#d32f2f',
+                                size: 14,
+                                symbol: 'diamond',
+                                line: {
+                                    color: '#ffffff',
+                                    width: 2
+                                }
+                            },
+                            hovertemplate: '<b>Forecasted Crest</b><br>' +
+                                           '%{x|%b %d, %Y %I:%M %p}<br>' +
+                                           'Stage: <b>%{y:.2f} ft</b><br>' +
+                                           '<extra></extra>'
+                        };
+
+                        traces.push(peakMarker);
+                    }
                 }
             }
 

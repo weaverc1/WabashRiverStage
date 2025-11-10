@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="refresh" content="900">
     <title>Wabash River at Legacy CIPS site - River Stage Monitor</title>
-    <!-- Rebuilt: 2025-11-05 -->
+    <!-- Rebuilt: 2025-11-10 -->
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
         * {
@@ -406,7 +410,7 @@
 <body>
     <div class="header-bar">
         <div class="header-content">
-            <h1>Wabash River at Legacy CIPS Site</h1>
+            <h1>Wabash River at Legacy CIPS Site <span style="font-size: 0.5em; opacity: 0.7;">v7.0</span></h1>
             <p class="subtitle">Real-Time River Stage Monitoring Station</p>
         </div>
     </div>
@@ -557,7 +561,7 @@
             </p>
             <p class="footer-divider">• • •</p>
             <p style="font-size: 0.85em; color: #adb5bd; margin-top: 15px;">
-                River Stage Monitor v6.0 | Data provided for informational purposes only
+                River Stage Monitor v7.0 | Data provided for informational purposes only
             </p>
         </footer>
     </div>
@@ -573,7 +577,15 @@
         // Fetch and display data
         async function loadData() {
             try {
-                const response = await fetch(DATA_URL);
+                // Add cache-busting parameter to force fresh data
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`${DATA_URL}?t=${cacheBuster}`, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -597,30 +609,48 @@
             createChart();
         }
 
-        function findForecastPeak() {
-            if (!riverData.forecast || riverData.forecast.length === 0) {
+        function separateActualAndForecast() {
+            // Separate actual readings from forecast data
+            const actualReadings = [];
+            const forecastReadings = [];
+
+            for (const reading of riverData.readings) {
+                if (reading.is_forecast) {
+                    forecastReadings.push(reading);
+                } else {
+                    actualReadings.push(reading);
+                }
+            }
+
+            return { actualReadings, forecastReadings };
+        }
+
+        function findForecastPeak(forecastData) {
+            if (!forecastData || forecastData.length === 0) {
                 return null;
             }
 
             let peakIndex = 0;
-            let peakStage = riverData.forecast[0].riverstage;
+            let peakStage = forecastData[0].riverstage;
 
-            for (let i = 1; i < riverData.forecast.length; i++) {
-                if (riverData.forecast[i].riverstage > peakStage) {
-                    peakStage = riverData.forecast[i].riverstage;
+            for (let i = 1; i < forecastData.length; i++) {
+                if (forecastData[i].riverstage > peakStage) {
+                    peakStage = forecastData[i].riverstage;
                     peakIndex = i;
                 }
             }
 
             return {
                 stage: peakStage,
-                timestamp: riverData.forecast[peakIndex].timestamp,
+                timestamp: forecastData[peakIndex].timestamp,
                 index: peakIndex
             };
         }
 
         function updateCurrentStatus() {
-            const latest = riverData.readings[riverData.readings.length - 1];
+            // Get the latest actual reading (not forecast)
+            const { actualReadings, forecastReadings } = separateActualAndForecast();
+            const latest = actualReadings[actualReadings.length - 1];
             const currentStage = latest.riverstage;
 
             document.getElementById('currentStage').innerHTML =
@@ -660,7 +690,7 @@
             }
 
             // Update forecasted crest if available
-            const forecastPeak = findForecastPeak();
+            const forecastPeak = findForecastPeak(forecastReadings);
             const forecastCard = document.getElementById('forecastCrestCard');
 
             if (forecastPeak) {
@@ -696,20 +726,25 @@
             // Clear the loading message
             document.getElementById('riverChart').innerHTML = '';
 
-            const timestamps = riverData.readings.map(r => new Date(r.timestamp));
-            const stages = riverData.readings.map(r => r.riverstage);
+            // Separate actual and forecast data
+            const { actualReadings, forecastReadings } = separateActualAndForecast();
 
-            const now = new Date();
+            // Get the current time (last actual reading)
+            const now = actualReadings.length > 0
+                ? new Date(actualReadings[actualReadings.length - 1].timestamp)
+                : new Date();
 
-            // Center the chart on current time
-            // Show 2.5 days of history and 2.5 days of forecast
-            const daysBeforeNow = 2.5;
-            const daysAfterNow = 2.5;
-            const defaultStart = new Date(now.getTime() - (daysBeforeNow * 24 * 60 * 60 * 1000));
-            const defaultEnd = new Date(now.getTime() + (daysAfterNow * 24 * 60 * 60 * 1000));
+            // Calculate time window: 5 days total (66% actual data, 33% forecast)
+            const totalDays = 5;
+            const forecastDays = totalDays * 0.33; // 33% for forecast (~1.67 days)
+            const actualDays = totalDays * 0.67; // 66% for actual data (~3.33 days)
+
+            const defaultStart = new Date(now.getTime() - (actualDays * 24 * 60 * 60 * 1000));
+            const defaultEnd = new Date(now.getTime() + (forecastDays * 24 * 60 * 60 * 1000));
 
             // Calculate Y-axis range
-            const maxStageInData = Math.max(...stages);
+            const allStages = [...actualReadings, ...forecastReadings].map(r => r.riverstage);
+            const maxStageInData = Math.max(...allStages);
             const yMin = 0;
             const yMax = Math.max(maxStageInData * 1.15, riverData.flood_stages.major + 5);
 
@@ -765,10 +800,10 @@
                 });
             });
 
-            // Observed data trace
+            // Observed data trace (actual readings only)
             const observedTrace = {
-                x: timestamps,
-                y: stages,
+                x: actualReadings.map(r => new Date(r.timestamp)),
+                y: actualReadings.map(r => r.riverstage),
                 type: 'scatter',
                 mode: 'lines',
                 name: 'Observed',
@@ -788,13 +823,17 @@
 
             // Add forecast trace if available
             let forecastPeakData = null;
-            if (riverData.forecast && riverData.forecast.length > 0) {
-                const forecastTimestamps = riverData.forecast.map(f => new Date(f.timestamp));
-                const forecastStages = riverData.forecast.map(f => f.riverstage);
+            if (forecastReadings.length > 0) {
+                // Create forecast trace that connects from the last actual reading
+                const lastActual = actualReadings[actualReadings.length - 1];
+                const forecastWithConnection = [
+                    { timestamp: lastActual.timestamp, riverstage: lastActual.riverstage },
+                    ...forecastReadings
+                ];
 
                 const forecastTrace = {
-                    x: forecastTimestamps,
-                    y: forecastStages,
+                    x: forecastWithConnection.map(f => new Date(f.timestamp)),
+                    y: forecastWithConnection.map(f => f.riverstage),
                     type: 'scatter',
                     mode: 'lines',
                     name: 'Forecast',
@@ -812,7 +851,7 @@
                 traces.push(forecastTrace);
 
                 // Add forecasted crest marker
-                const forecastPeak = findForecastPeak();
+                const forecastPeak = findForecastPeak(forecastReadings);
                 if (forecastPeak) {
                     forecastPeakData = forecastPeak;
                     const peakMarker = {

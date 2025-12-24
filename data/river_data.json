@@ -8,7 +8,7 @@
     "major": 28,
     "near_record": 29
   },
-  "last_updated": "2025-12-23T17:45:02.141193",
+  "last_updated": "2025-12-23T18:00:01.833971",
   "readings": [
     {
       "timestamp": "2025-09-16T12:56:07.791643",
@@ -41509,136 +41509,141 @@
       "timestamp": "2025-12-23T17:44:17.998594",
       "riverstage": 4.155,
       "date_display": "2025-12-23 17:44:17"
+    },
+    {
+      "timestamp": "2025-12-23T17:59:19.565746",
+      "riverstage": 4.154,
+      "date_display": "2025-12-23 17:59:19"
     }
   ],
   "forecast": [
     {
-      "timestamp": "2025-12-23T17:44:17.998594",
-      "riverstage": 4.155,
-      "date_display": "2025-12-23 17:44:17",
+      "timestamp": "2025-12-23T17:59:19.565746",
+      "riverstage": 4.154,
+      "date_display": "2025-12-23 17:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-23T23:44:17.998594",
+      "timestamp": "2025-12-23T23:59:19.565746",
       "riverstage": 3.88,
-      "date_display": "2025-12-23 23:44:17",
+      "date_display": "2025-12-23 23:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-24T05:44:17.998594",
+      "timestamp": "2025-12-24T05:59:19.565746",
       "riverstage": 3.61,
-      "date_display": "2025-12-24 05:44:17",
+      "date_display": "2025-12-24 05:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-24T11:44:17.998594",
-      "riverstage": 3.34,
-      "date_display": "2025-12-24 11:44:17",
+      "timestamp": "2025-12-24T11:59:19.565746",
+      "riverstage": 3.33,
+      "date_display": "2025-12-24 11:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-24T17:44:17.998594",
-      "riverstage": 3.07,
-      "date_display": "2025-12-24 17:44:17",
+      "timestamp": "2025-12-24T17:59:19.565746",
+      "riverstage": 3.06,
+      "date_display": "2025-12-24 17:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-24T23:44:17.998594",
+      "timestamp": "2025-12-24T23:59:19.565746",
       "riverstage": 3.03,
-      "date_display": "2025-12-24 23:44:17",
+      "date_display": "2025-12-24 23:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-25T05:44:17.998594",
+      "timestamp": "2025-12-25T05:59:19.565746",
       "riverstage": 3.0,
-      "date_display": "2025-12-25 05:44:17",
+      "date_display": "2025-12-25 05:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-25T11:44:17.998594",
+      "timestamp": "2025-12-25T11:59:19.565746",
       "riverstage": 2.97,
-      "date_display": "2025-12-25 11:44:17",
+      "date_display": "2025-12-25 11:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-25T17:44:17.998594",
+      "timestamp": "2025-12-25T17:59:19.565746",
       "riverstage": 2.94,
-      "date_display": "2025-12-25 17:44:17",
+      "date_display": "2025-12-25 17:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-25T23:44:17.998594",
+      "timestamp": "2025-12-25T23:59:19.565746",
       "riverstage": 2.91,
-      "date_display": "2025-12-25 23:44:17",
+      "date_display": "2025-12-25 23:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-26T05:44:17.998594",
+      "timestamp": "2025-12-26T05:59:19.565746",
       "riverstage": 2.88,
-      "date_display": "2025-12-26 05:44:17",
+      "date_display": "2025-12-26 05:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-26T11:44:17.998594",
+      "timestamp": "2025-12-26T11:59:19.565746",
       "riverstage": 2.85,
-      "date_display": "2025-12-26 11:44:17",
+      "date_display": "2025-12-26 11:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-26T17:44:17.998594",
+      "timestamp": "2025-12-26T17:59:19.565746",
       "riverstage": 2.82,
-      "date_display": "2025-12-26 17:44:17",
+      "date_display": "2025-12-26 17:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-26T23:44:17.998594",
+      "timestamp": "2025-12-26T23:59:19.565746",
       "riverstage": 2.8,
-      "date_display": "2025-12-26 23:44:17",
+      "date_display": "2025-12-26 23:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-27T05:44:17.998594",
+      "timestamp": "2025-12-27T05:59:19.565746",
       "riverstage": 2.77,
-      "date_display": "2025-12-27 05:44:17",
+      "date_display": "2025-12-27 05:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-27T11:44:17.998594",
+      "timestamp": "2025-12-27T11:59:19.565746",
       "riverstage": 2.74,
-      "date_display": "2025-12-27 11:44:17",
+      "date_display": "2025-12-27 11:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-27T17:44:17.998594",
+      "timestamp": "2025-12-27T17:59:19.565746",
       "riverstage": 2.71,
-      "date_display": "2025-12-27 17:44:17",
+      "date_display": "2025-12-27 17:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-27T23:44:17.998594",
+      "timestamp": "2025-12-27T23:59:19.565746",
       "riverstage": 2.69,
-      "date_display": "2025-12-27 23:44:17",
+      "date_display": "2025-12-27 23:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-28T05:44:17.998594",
+      "timestamp": "2025-12-28T05:59:19.565746",
       "riverstage": 2.66,
-      "date_display": "2025-12-28 05:44:17",
+      "date_display": "2025-12-28 05:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-28T11:44:17.998594",
+      "timestamp": "2025-12-28T11:59:19.565746",
       "riverstage": 2.63,
-      "date_display": "2025-12-28 11:44:17",
+      "date_display": "2025-12-28 11:59:19",
       "is_forecast": true
     },
     {
-      "timestamp": "2025-12-28T17:44:17.998594",
+      "timestamp": "2025-12-28T17:59:19.565746",
       "riverstage": 2.61,
-      "date_display": "2025-12-28 17:44:17",
+      "date_display": "2025-12-28 17:59:19",
       "is_forecast": true
     }
   ],
-  "forecast_generated": "2025-12-23T17:45:02.957544",
+  "forecast_generated": "2025-12-23T18:00:02.657052",
   "forecast_method": "Interpolation from TERI3/RVTI3 NOAA forecasts"
 }

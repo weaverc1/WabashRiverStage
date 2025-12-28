@@ -42629,6 +42629,6 @@
       "is_forecast": true
     }
   ],
-  "forecast_generated": "2025-12-28T13:00:03.327922",
+  "forecast_generated": "2025-12-28T13:15:03.258246",
   "forecast_method": "Interpolation from TERI3/RVTI3 NOAA forecasts"
 }

@@ -43994,6 +43994,6 @@
       "is_forecast": true
     }
   ],
-  "forecast_generated": "2026-01-04T14:00:03.333480",
+  "forecast_generated": "2026-01-04T14:15:03.340607",
   "forecast_method": "Interpolation from TERI3/RVTI3 NOAA forecasts"
 }

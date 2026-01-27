@@ -79,20 +79,36 @@ def load_existing_data(data_file_path):
         return None
 
 def update_data(existing_data, new_reading):
-    """Add new reading to existing data, avoiding duplicates."""
+    """Add new reading to existing data, avoiding duplicates and filtering outliers."""
     if new_reading is None:
         return existing_data
-    
+
     # Check if this reading already exists (based on timestamp)
     existing_timestamps = [r['timestamp'] for r in existing_data['readings']]
-    
+
     if new_reading['timestamp'] not in existing_timestamps:
-        existing_data['readings'].append(new_reading)
-        existing_data['last_updated'] = datetime.now().isoformat()
-        print(f"Added new reading: {new_reading['date_display']} - {new_reading['riverstage']} ft")
+        # Outlier detection: check for sudden >10ft change
+        should_add = True
+        if existing_data['readings']:
+            last_reading = existing_data['readings'][-1]
+            last_stage = last_reading['riverstage']
+            new_stage = new_reading['riverstage']
+            change = abs(new_stage - last_stage)
+
+            if change > 10.0:
+                print(f"⚠ OUTLIER DETECTED: River stage jumped {change:.2f} ft ({last_stage:.3f} → {new_stage:.3f})")
+                print(f"⚠ Rejecting erroneous reading: {new_reading['date_display']} - {new_reading['riverstage']} ft")
+                should_add = False
+
+        if should_add:
+            existing_data['readings'].append(new_reading)
+            existing_data['last_updated'] = datetime.now().isoformat()
+            print(f"Added new reading: {new_reading['date_display']} - {new_reading['riverstage']} ft")
+        else:
+            print(f"Skipped outlier reading (possible sensor error)")
     else:
         print(f"Reading already exists for {new_reading['date_display']}, skipping")
-    
+
     return existing_data
 
 def save_data(data, data_file_path):
@@ -217,7 +233,13 @@ def main():
     
     print(f"\n{'='*60}")
     print("Update completed successfully!")
-    print(f"Current river stage: {new_reading['riverstage']} ft")
+
+    # Show current river stage from actual last reading in data
+    if updated_data['readings']:
+        last_reading = updated_data['readings'][-1]
+        print(f"Current river stage: {last_reading['riverstage']} ft")
+        print(f"Last reading: {last_reading['date_display']}")
+
     print(f"Total readings: {len(updated_data['readings'])}")
 
     # Show forecast info if available

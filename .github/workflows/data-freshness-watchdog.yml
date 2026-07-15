@@ -1,0 +1,41 @@
+name: Data Freshness Watchdog
+
+# Checks the live GitHub Pages site hourly. If the river data is older than
+# MAX_AGE_MINUTES, the job fails and GitHub emails the repo owner
+# ("[weaverc1/WabashRiverStage] Run failed: Data Freshness Watchdog ...").
+
+on:
+  schedule:
+    - cron: '17 * * * *'   # hourly at :17
+  workflow_dispatch:
+
+jobs:
+  check-freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check website data age
+        run: |
+          python3 - <<'EOF'
+          import json, sys, time, urllib.request
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          MAX_AGE_MINUTES = 90
+
+          url = ("https://weaverc1.github.io/WabashRiverStage/data/river_data.json"
+                 f"?nocache={int(time.time())}")
+          req = urllib.request.Request(url, headers={"Cache-Control": "no-cache"})
+          data = json.load(urllib.request.urlopen(req, timeout=30))
+
+          tz = ZoneInfo("America/Chicago")  # timestamps in the JSON are naive local time
+          last = datetime.fromisoformat(data["last_updated"]).replace(tzinfo=tz)
+          age_min = (datetime.now(tz) - last).total_seconds() / 60
+
+          print(f"last_updated: {last:%Y-%m-%d %H:%M:%S %Z}  (age: {age_min:.0f} minutes)")
+          if age_min > MAX_AGE_MINUTES:
+              print(f"STALE: website data is {age_min:.0f} minutes old "
+                    f"(limit {MAX_AGE_MINUTES}).")
+              print("Check the RX Pi: cron job, git push, and LoRa receive path.")
+              sys.exit(1)
+          print("OK: data is current.")
+          EOF

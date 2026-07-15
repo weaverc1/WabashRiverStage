@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="refresh" content="900">
+    <title>Wabash River at Hutsonville - River Stage Monitor</title>
+    <!-- Rebuilt: 2025-11-10 -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e8eef2;
+            min-height: 100vh;
+        }
+
+        .header-bar {
+            background: linear-gradient(135deg, #1e5a8e 0%, #2471a3 100%);
+            color: white;
+            padding: 20px 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .header-bar .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-bar h1 {
+            font-size: 1.8em;
+            font-weight: 400;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .header-bar .subtitle {
+            font-size: 0.95em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .nav-tabs {
+            background: #ffffff;
+            border-bottom: 2px solid #d5dde4;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .nav-tabs .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 5px;
+            padding: 0 20px;
+        }
+
+        .nav-tabs a {
+            padding: 12px 24px;
+            color: #2471a3;
+            text-decoration: none;
+            font-size: 0.95em;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-tabs a:hover {
+            background: #f0f4f7;
+            border-bottom-color: #2471a3;
+        }
+
+        .nav-tabs a.active {
+            color: #1e5a8e;
+            border-bottom-color: #1e5a8e;
+            background: #f8fafb;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .status-banner {
+            background: linear-gradient(to right, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px 30px;
+            border-bottom: 3px solid #d5dde4;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .status-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            border-left: 4px solid #2471a3;
+        }
+
+        .status-item .label {
+            font-size: 0.8em;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .status-item .value {
+            font-size: 3em;
+            font-weight: 300;
+            color: #1e5a8e;
+            line-height: 1;
+        }
+
+        .status-item .unit {
+            font-size: 0.9em;
+            color: #868e96;
+            margin-left: 5px;
+        }
+
+        .status-item .subtext {
+            font-size: 0.85em;
+            color: #495057;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .status-item.warning {
+            border-left-color: #ff9800;
+        }
+
+        .status-item.warning .value {
+            color: #f57c00;
+        }
+
+        .status-item.danger {
+            border-left-color: #f44336;
+        }
+
+        .status-item.danger .value {
+            color: #d32f2f;
+        }
+
+        .chart-section {
+            padding: 30px;
+            background: #fafbfc;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            color: #1e5a8e;
+            margin-bottom: 20px;
+            font-weight: 400;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #d5dde4;
+        }
+
+        .chart-wrapper {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        #riverChart {
+            width: 100%;
+            height: 700px;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .info-panel {
+            padding: 30px;
+            background: white;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 5px solid;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .info-card.action { border-left-color: #ffc107; }
+        .info-card.minor { border-left-color: #ff9800; }
+        .info-card.moderate { border-left-color: #ff5722; }
+        .info-card.major { border-left-color: #f44336; }
+
+        .info-card h3 {
+            font-size: 1.15em;
+            color: #1e5a8e;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .info-card .stage {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .info-card p {
+            font-size: 0.9em;
+            color: #495057;
+            line-height: 1.6;
+        }
+
+        .historical-section {
+            background: #e3f2fd;
+            padding: 25px;
+            border-radius: 6px;
+            border-left: 5px solid #2471a3;
+            margin-top: 25px;
+        }
+
+        .historical-section h3 {
+            font-size: 1.2em;
+            color: #1e5a8e;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .historical-section p {
+            font-size: 0.95em;
+            color: #37474f;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .legend-section {
+            padding: 25px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 4px;
+            border-left: 4px solid;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+
+        .legend-item.action { border-left-color: #ffc107; }
+        .legend-item.flood { border-left-color: #ff9800; }
+        .legend-item.moderate { border-left-color: #ff5722; }
+        .legend-item.major { border-left-color: #f44336; }
+        .legend-item.near-record { border-left-color: #9c27b0; }
+
+        .legend-item .label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-right: 10px;
+            min-width: 120px;
+        }
+
+        .legend-item .value {
+            color: #6c757d;
+            font-size: 0.95em;
+        }
+
+        footer {
+            padding: 25px 30px;
+            text-align: center;
+            background: white;
+            color: #6c757d;
+            font-size: 0.9em;
+            border-top: 1px solid #e9ecef;
+        }
+
+        footer a {
+            color: #2471a3;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-divider {
+            margin: 15px 0;
+            color: #dee2e6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        .error {
+            text-align: center;
+            padding: 80px 20px;
+            color: #f44336;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .header-bar {
+                padding: 15px 20px;
+            }
+
+            .header-bar h1 {
+                font-size: 1.3em;
+            }
+
+            .header-bar .subtitle {
+                font-size: 0.85em;
+            }
+
+            .nav-tabs .nav-content {
+                flex-wrap: wrap;
+                padding: 0 10px;
+            }
+
+            .nav-tabs a {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+
+            .status-banner {
+                padding: 20px 15px;
+            }
+
+            .status-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .status-item .value {
+                font-size: 2.5em;
+            }
+
+            .chart-section {
+                padding: 20px 15px;
+            }
+
+            #riverChart {
+                height: 500px;
+            }
+
+            .info-panel {
+                padding: 20px 15px;
+            }
+
+            .section-title {
+                font-size: 1.2em;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .legend-grid {
+                grid-template-columns: 1fr;
+            }
+
+            footer {
+                padding: 20px 15px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <div class="header-content">
+            <h1>Wabash River at Hutsonville</h1>
+            <p class="subtitle">Real-Time River Stage Monitoring Station</p>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="nav-content">
+            <a href="#overview" class="active">Overview</a>
+            <a href="#data">Data & Graph</a>
+            <a href="#impacts">Flood Stages</a>
+            <a href="#history">Detailed Impacts</a>
+            <a href="data.html">Data Table</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="status-banner" id="overview">
+            <div class="status-grid">
+                <div class="status-item" id="currentStageCard">
+                    <div class="label">Current Stage</div>
+                    <div class="value" id="currentStage">--</div>
+                    <div class="subtext" id="statusText">Loading...</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Flood Stage</div>
+                    <div class="value">16.0<span class="unit">ft</span></div>
+                    <div class="subtext">Minor Flooding</div>
+                </div>
+                <div class="status-item" id="forecastCrestCard" style="display: none;">
+                    <div class="label">Forecasted Crest</div>
+                    <div class="value" id="forecastCrestStage">--</div>
+                    <div class="subtext" id="forecastCrestTime">--</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Last Updated</div>
+                    <div class="value" style="font-size: 1.2em; padding-top: 10px;" id="lastUpdate">--</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-section" id="data">
+            <h2 class="section-title">River Stage Hydrograph</h2>
+            <div class="chart-wrapper">
+                <div id="riverChart" class="loading">Loading hydrograph data...</div>
+            </div>
+        </div>
+
+        <div class="info-panel" id="impacts">
+            <h2 class="section-title">Flood Impact Stages</h2>
+            <div class="info-grid">
+                <div class="info-card action">
+                    <h3>Action Stage</h3>
+                    <div class="stage">12.0 feet</div>
+                    <p>Minor flooding begins in low-lying areas. Monitoring and preparation recommended for vulnerable locations along the river.</p>
+                </div>
+                <div class="info-card minor">
+                    <h3>Minor Flood Stage</h3>
+                    <div class="stage">16.0 feet</div>
+                    <p>Flooding of agricultural land and secondary roads near the river. Some evacuations of property may be necessary.</p>
+                </div>
+                <div class="info-card moderate">
+                    <h3>Moderate Flood Stage</h3>
+                    <div class="stage">24.0 feet</div>
+                    <p>Significant flooding of residential and commercial areas. Roads may become impassable. Structures near the river at risk.</p>
+                </div>
+                <div class="info-card major">
+                    <h3>Major Flood Stage</h3>
+                    <div class="stage">28.0 feet</div>
+                    <p>Extensive flooding of residential and commercial structures. Major evacuations likely. Significant threat to life and property.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-panel" id="history">
+            <h2 class="section-title">Station Information & Detailed Flood Impacts</h2>
+
+            <div class="historical-section">
+                <h3>About This Monitoring Station</h3>
+                <p>This monitoring location is at the Hutsonville Wabash River Bridge. While it located on the bridge, the sensor is calibrated to match the river depth at the former Hutsonville Power Plant (now closed). This calibration allows the values to coorelate with the now archived data and flood stages from the National Weather Service. This new site is maintained by the Hutsonville Township Park District and provided critical river stage data for flood forecasting and public safety.</p>
+            </div>
+
+            <div class="historical-section">
+                <h3>Detailed Flood Impacts by River Stage</h3>
+
+                <p><strong>29.0 feet - Near Record Flooding:</strong> Widespread rural flooding is in progress. Evacuations are necessary behind Island Creek levee in Indiana and in the small Illinois towns of Hutsonville, York, and Darwin. Water is at the top of most agricultural levees. Many local river roads are extensively flooded. A 5 mile drive from Hutsonville to Grayville across the Wabash is now a 70 mile trip.</p>
+
+                <p><strong>28.1 feet:</strong> At this level or slightly above SR 154 is closed to prevent shaking of nearby Island Creek Levee.</p>
+
+                <p><strong>28.0 feet - Major Flood Stage:</strong> Widespread rural flooding is in progress. All river roads are impassable, some by several feet of water. Evacuations are necessary in the small Illinois towns of Hutsonville, Darwin and eastern portion of York. Evacuations may also be necessary for those couple of families behind Island levee in Indiana. Water is at the top of most agricultural levees.</p>
+
+                <p><strong>27.0 feet:</strong> Island Creek Levee on Indiana side is in danger of failing. There are 2 farms on higher ground in protected area. A few evacuations in Illinois towns of Hutsonville, York, and possibly Darwin are necessary. Local improved road south of Hutsonville to Palestine is impassable. Flood water affecting south and northeast residential areas of Hutsonville.</p>
+
+                <p><strong>26.0 feet:</strong> Island Creek Levee on Indiana side is in danger of failing. There are 2 farms on higher ground in protected area. A few evacuations are necessary in Illinois towns of Hutsonville, York, and possibly Darwin. Local improved road south of Hutsonville to Palestine floods extensively in places.</p>
+
+                <p><strong>25.0 feet:</strong> Extensive flooding is in progress in York and Hutsonville, Illinois. Flood waters surround homes and are in a local park. Local river road south of Hutsonville to Palestine almost floods.</p>
+
+                <p><strong>24.0 feet - Moderate Flood Stage:</strong> Extensive flooding is in progress. Rural roads in eastern Clark and Crawford counties in Illinois are impassible. A few mobile home residences and area along Hutson Creek just south of Hutsonville flood. Flood is at critical level for most of levees. Extensive seep water is behind levees. Water surrounds residential areas of Riverton, Riverview, Hutsonville and eastern York.</p>
+
+                <p><strong>23.8 feet:</strong> Ball field in Hutsonville is extensively flooded. Blacktop road that runs along the Wabash River from Hutsonville to Palestine is still above flood waters. Most all of the roads leading from this road to the Wabash are underwater, some by several feet of water.</p>
+
+                <p><strong>22.9 feet:</strong> Extensive backwater flooding of Hutson Creek affecting residential property on the south side of Hutsonville. Flood waters near the intersection of N. Main and E. Mechanic St on the northeast side of Hutsonville. RVs and campers located along the river just south of Hutsonville moved to higher ground.</p>
+
+                <p><strong>22.8 feet:</strong> Flooding extends to what is locally called River Road in several areas. River Road is the rural way south from Hutsonville to Palestine. Flooding in this area affects large expanses of agricultural land, river cabins and hunting areas on both sides of the river. Most local, unimproved roads leading towards the river are flooded. These roads led to farms, river cabins, private residences, levees and a few oil wells.</p>
+
+                <p><strong>22.0 feet:</strong> River cabins become isolated. Basement flooding begins in Hutsonville. Extensive agricultural flooding is in progress. Higher Illinois rural roads in eastern Clark and Crawford counties flood.</p>
+
+                <p><strong>20.0 feet:</strong> Leaverton Park in Palestine and park in Hutsonville begin to flood. Agricultural flooding spreads to higher land. Seep water is noticeable behind levees. Some elevated river cottages are surrounded by water. Several county or township roads east of Lincoln Heritage Trail between Palestine and Hutsonville in Crawford County Illinois are impassable.</p>
+
+                <p><strong>18.0 feet:</strong> Seep water occurs behind levees on Indiana side. Hutson Creek begins to overflow from backwater. Old Darwin Road and a few rural roads in eastern Clark and Crawford counties in Illinois are impassable. Low agricultural land floods.</p>
+
+                <p><strong>16.0 feet - Minor Flood Stage:</strong> Old Darwin Road and a few low rural roads between York and Hutsonville, Illinois begin to flood. Agricultural flooding begins along portions of the river.</p>
+
+                <p><strong>14.0 feet:</strong> Flooding of lowest agricultural lands begins in eastern Clark and Crawford counties in Illinois.</p>
+            </div>
+        </div>
+
+        <div class="legend-section">
+            <h2 class="section-title">Flood Stage Reference Guide</h2>
+            <div class="legend-grid">
+                <div class="legend-item action">
+                    <span class="label">Action Stage</span>
+                    <span class="value">12.0 feet</span>
+                </div>
+                <div class="legend-item flood">
+                    <span class="label">Flood Stage</span>
+                    <span class="value">16.0 feet</span>
+                </div>
+                <div class="legend-item moderate">
+                    <span class="label">Moderate Flooding</span>
+                    <span class="value">24.0 feet</span>
+                </div>
+                <div class="legend-item major">
+                    <span class="label">Major Flooding</span>
+                    <span class="value">28.0 feet</span>
+                </div>
+                <div class="legend-item near-record">
+                    <span class="label">Near Record</span>
+                    <span class="value">29.0 feet</span>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Data Updates:</strong> Automatic updates every 15 minutes</p>
+            <p class="footer-divider">• • •</p>
+            <p>
+                <strong>Related Monitoring Stations:</strong><br>
+                <a href="https://water.noaa.gov/gauges/TERI3" target="_blank" rel="noopener noreferrer">Upstream Station (TERI3)</a> |
+                <a href="https://water.noaa.gov/gauges/RVTI3" target="_blank" rel="noopener noreferrer">Downstream Station (RVTI3)</a>
+            </p>
+            <p class="footer-divider">• • •</p>
+            <p style="font-size: 0.85em; color: #adb5bd; margin-top: 15px;">
+                River Stage Monitor v7.1 | Data provided for informational purposes only
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Configuration
+        const DATA_URL = 'data/river_data.json';
+        const HISTORICAL_DATA_URL = 'data/river_data_historical.json';
+        const DEFAULT_DAYS = 7;
+
+        // Global data store
+        let riverData = null;
+        let historicalData = null;
+        let historicalDataLoaded = false;
+        let historicalDataLoading = false;
+
+        // Fetch and display data
+        async function loadData() {
+            try {
+                // Add cache-busting parameter to force fresh data
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`${DATA_URL}?t=${cacheBuster}`, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                riverData = await response.json();
+                displayData();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('riverChart').innerHTML =
+                    '<div class="error">Error loading data. Please try again later.</div>';
+            }
+        }
+
+        // Lazy load historical data when needed
+        async function loadHistoricalData() {
+            if (historicalDataLoaded || historicalDataLoading) {
+                return historicalDataLoaded;
+            }
+
+            // Check if historical data exists
+            if (!riverData.has_historical_data) {
+                console.log('No historical data available');
+                return false;
+            }
+
+            historicalDataLoading = true;
+            console.log('Loading historical data...');
+
+            try {
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`${HISTORICAL_DATA_URL}?t=${cacheBuster}`, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                historicalData = await response.json();
+                historicalDataLoaded = true;
+                historicalDataLoading = false;
+                console.log(`Historical data loaded: ${historicalData.readings.length} readings`);
+                return true;
+            } catch (error) {
+                console.error('Error loading historical data:', error);
+                historicalDataLoading = false;
+                return false;
+            }
+        }
+
+        // Get combined readings (historical + recent)
+        function getCombinedReadings() {
+            if (!historicalDataLoaded || !historicalData) {
+                return riverData.readings;
+            }
+
+            // Merge historical and recent readings
+            const combined = [...historicalData.readings, ...riverData.readings];
+            // Sort by timestamp (should already be sorted, but ensure it)
+            combined.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            return combined;
+        }
+
+        function displayData() {
+            if (!riverData || !riverData.readings || riverData.readings.length === 0) {
+                document.getElementById('riverChart').innerHTML =
+                    '<div class="error">No data available yet.</div>';
+                return;
+            }
+
+            updateCurrentStatus();
+            createChart();
+        }
+
+        function separateActualAndForecast() {
+            // Get combined readings (includes historical if loaded)
+            const actualReadings = getCombinedReadings() || [];
+            const forecastReadings = riverData.forecast || [];
+
+            return { actualReadings, forecastReadings };
+        }
+
+        function findForecastPeak(forecastData) {
+            if (!forecastData || forecastData.length === 0) {
+                return null;
+            }
+
+            let peakIndex = 0;
+            let peakStage = forecastData[0].riverstage;
+
+            for (let i = 1; i < forecastData.length; i++) {
+                if (forecastData[i].riverstage > peakStage) {
+                    peakStage = forecastData[i].riverstage;
+                    peakIndex = i;
+                }
+            }
+
+            return {
+                stage: peakStage,
+                timestamp: forecastData[peakIndex].timestamp,
+                index: peakIndex
+            };
+        }
+
+        function updateCurrentStatus() {
+            // Get the latest actual reading (not forecast)
+            const { actualReadings, forecastReadings } = separateActualAndForecast();
+            const latest = actualReadings[actualReadings.length - 1];
+            const currentStage = latest.riverstage;
+
+            document.getElementById('currentStage').innerHTML =
+                currentStage.toFixed(2) + '<span class="unit">ft</span>';
+
+            const updateTime = new Date(latest.timestamp);
+            document.getElementById('lastUpdate').textContent =
+                updateTime.toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit'
+                });
+
+            const card = document.getElementById('currentStageCard');
+            const statusElement = document.getElementById('statusText');
+
+            card.classList.remove('warning', 'danger');
+
+            if (currentStage >= riverData.flood_stages.near_record) {
+                statusElement.textContent = 'Near Record Flood';
+                card.classList.add('danger');
+            } else if (currentStage >= riverData.flood_stages.major) {
+                statusElement.textContent = 'Major Flooding';
+                card.classList.add('danger');
+            } else if (currentStage >= riverData.flood_stages.moderate) {
+                statusElement.textContent = 'Moderate Flooding';
+                card.classList.add('danger');
+            } else if (currentStage >= riverData.flood_stages.flood) {
+                statusElement.textContent = 'Minor Flooding';
+                card.classList.add('warning');
+            } else if (currentStage >= riverData.flood_stages.action) {
+                statusElement.textContent = 'Action Stage';
+                card.classList.add('warning');
+            } else {
+                statusElement.textContent = 'Normal Conditions';
+            }
+
+            // Update forecasted crest if available and at least 4 hours away
+            const forecastPeak = findForecastPeak(forecastReadings);
+            const forecastCard = document.getElementById('forecastCrestCard');
+
+            if (forecastPeak) {
+                const crestTime = new Date(forecastPeak.timestamp);
+                const crestStage = forecastPeak.stage;
+                const nowTime = new Date(latest.timestamp);
+                const hoursUntilPeak = (crestTime - nowTime) / (1000 * 60 * 60);
+
+                // Only show crest card if it's at least 4 hours in the future
+                if (hoursUntilPeak >= 4) {
+                    document.getElementById('forecastCrestStage').innerHTML =
+                        crestStage.toFixed(2) + '<span class="unit">ft</span>';
+
+                    document.getElementById('forecastCrestTime').textContent =
+                        crestTime.toLocaleString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: 'numeric',
+                            minute: '2-digit'
+                        });
+
+                    // Apply warning/danger styling based on crest stage
+                    forecastCard.classList.remove('warning', 'danger');
+                    if (crestStage >= riverData.flood_stages.flood) {
+                        forecastCard.classList.add('danger');
+                    } else if (crestStage >= riverData.flood_stages.action) {
+                        forecastCard.classList.add('warning');
+                    }
+
+                    forecastCard.style.display = '';
+                } else {
+                    forecastCard.style.display = 'none';
+                }
+            } else {
+                forecastCard.style.display = 'none';
+            }
+        }
+
+        function createChart() {
+            // Clear the loading message
+            document.getElementById('riverChart').innerHTML = '';
+
+            // Separate actual and forecast data
+            const { actualReadings, forecastReadings } = separateActualAndForecast();
+
+            // Get the current time (last actual reading)
+            const now = actualReadings.length > 0
+                ? new Date(actualReadings[actualReadings.length - 1].timestamp)
+                : new Date();
+
+            // Calculate time window: 5 days total (66% actual data, 33% forecast)
+            const totalDays = 5;
+            const forecastDays = totalDays * 0.33; // 33% for forecast (~1.67 days)
+            const actualDays = totalDays * 0.67; // 66% for actual data (~3.33 days)
+
+            const defaultStart = new Date(now.getTime() - (actualDays * 24 * 60 * 60 * 1000));
+            const defaultEnd = new Date(now.getTime() + (forecastDays * 24 * 60 * 60 * 1000));
+
+            // Calculate Y-axis range
+            const allStages = [...actualReadings, ...forecastReadings].map(r => r.riverstage);
+            const maxStageInData = Math.max(...allStages);
+            const yMin = 0;
+            const yMax = Math.max(maxStageInData * 1.15, riverData.flood_stages.major + 5);
+
+            const isMobile = window.innerWidth <= 768;
+
+            // Create filled areas for flood stages
+            const shapes = [];
+
+            // Background flood zones (filled areas)
+            const floodZones = [
+                { y0: 0, y1: riverData.flood_stages.action, color: 'rgba(76, 175, 80, 0.08)' },
+                { y0: riverData.flood_stages.action, y1: riverData.flood_stages.flood, color: 'rgba(255, 193, 7, 0.12)' },
+                { y0: riverData.flood_stages.flood, y1: riverData.flood_stages.moderate, color: 'rgba(255, 152, 0, 0.15)' },
+                { y0: riverData.flood_stages.moderate, y1: riverData.flood_stages.major, color: 'rgba(255, 87, 34, 0.18)' },
+                { y0: riverData.flood_stages.major, y1: riverData.flood_stages.near_record, color: 'rgba(244, 67, 54, 0.2)' },
+                { y0: riverData.flood_stages.near_record, y1: yMax, color: 'rgba(156, 39, 176, 0.25)' }
+            ];
+
+            floodZones.forEach(zone => {
+                shapes.push({
+                    type: 'rect',
+                    xref: 'paper',
+                    yref: 'y',
+                    x0: 0,
+                    x1: 1,
+                    y0: zone.y0,
+                    y1: zone.y1,
+                    fillcolor: zone.color,
+                    line: { width: 0 },
+                    layer: 'below'
+                });
+            });
+
+            // Add flood stage lines
+            const stageLines = [
+                { stage: riverData.flood_stages.action, color: '#ffc107', width: 2 },
+                { stage: riverData.flood_stages.flood, color: '#ff9800', width: 2.5 },
+                { stage: riverData.flood_stages.moderate, color: '#ff5722', width: 2.5 },
+                { stage: riverData.flood_stages.major, color: '#f44336', width: 3 },
+                { stage: riverData.flood_stages.near_record, color: '#9c27b0', width: 2.5 }
+            ];
+
+            stageLines.forEach(line => {
+                shapes.push({
+                    type: 'line',
+                    xref: 'paper',
+                    yref: 'y',
+                    x0: 0,
+                    x1: 1,
+                    y0: line.stage,
+                    y1: line.stage,
+                    line: { color: line.color, width: line.width, dash: 'dot' }
+                });
+            });
+
+            // Observed data trace (actual readings only)
+            const observedTrace = {
+                x: actualReadings.map(r => new Date(r.timestamp)),
+                y: actualReadings.map(r => r.riverstage),
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Observed',
+                line: {
+                    color: '#1976d2',
+                    width: 3,
+                    shape: 'spline'
+                },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(25, 118, 210, 0.15)',
+                hovertemplate: '<b>%{x|%b %d, %Y %I:%M %p}</b><br>' +
+                               'River Stage: <b>%{y:.2f} ft</b><br>' +
+                               '<extra></extra>'
+            };
+
+            const traces = [observedTrace];
+
+            // Add forecast trace if available
+            let forecastPeakData = null;
+            if (forecastReadings.length > 0) {
+                // Create forecast trace that connects from the last actual reading
+                const lastActual = actualReadings[actualReadings.length - 1];
+                const forecastWithConnection = [
+                    { timestamp: lastActual.timestamp, riverstage: lastActual.riverstage },
+                    ...forecastReadings
+                ];
+
+                const forecastTrace = {
+                    x: forecastWithConnection.map(f => new Date(f.timestamp)),
+                    y: forecastWithConnection.map(f => f.riverstage),
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Forecast',
+                    line: {
+                        color: '#ff9800',
+                        width: 3,
+                        dash: 'dash',
+                        shape: 'spline'
+                    },
+                    hovertemplate: '<b>%{x|%b %d, %Y %I:%M %p}</b><br>' +
+                                   'Forecast Stage: <b>%{y:.2f} ft</b><br>' +
+                                   '<extra></extra>'
+                };
+
+                traces.push(forecastTrace);
+
+                // Add forecasted crest marker only if it's at least 4 hours away
+                const forecastPeak = findForecastPeak(forecastReadings);
+                if (forecastPeak) {
+                    const peakTime = new Date(forecastPeak.timestamp);
+                    const hoursUntilPeak = (peakTime - now) / (1000 * 60 * 60);
+
+                    // Only show crest if it's at least 4 hours in the future
+                    if (hoursUntilPeak >= 4) {
+                        forecastPeakData = forecastPeak;
+                        const peakMarker = {
+                            x: [peakTime],
+                            y: [forecastPeak.stage],
+                            type: 'scatter',
+                            mode: 'markers',
+                            name: 'Forecasted Crest',
+                            marker: {
+                                color: '#d32f2f',
+                                size: 14,
+                                symbol: 'diamond',
+                                line: {
+                                    color: '#ffffff',
+                                    width: 2
+                                }
+                            },
+                            hovertemplate: '<b>Forecasted Crest</b><br>' +
+                                           '%{x|%b %d, %Y %I:%M %p}<br>' +
+                                           'Stage: <b>%{y:.2f} ft</b><br>' +
+                                           '<extra></extra>'
+                        };
+
+                        traces.push(peakMarker);
+                    }
+                }
+            }
+
+            // Add annotation for forecasted crest
+            const annotations = [];
+            if (forecastPeakData) {
+                annotations.push({
+                    x: new Date(forecastPeakData.timestamp),
+                    y: forecastPeakData.stage,
+                    xref: 'x',
+                    yref: 'y',
+                    text: `Crest: ${forecastPeakData.stage.toFixed(2)} ft`,
+                    showarrow: true,
+                    arrowhead: 2,
+                    arrowsize: 1,
+                    arrowwidth: 2,
+                    arrowcolor: '#d32f2f',
+                    ax: 0,
+                    ay: -40,
+                    bgcolor: 'rgba(255, 255, 255, 0.95)',
+                    bordercolor: '#d32f2f',
+                    borderwidth: 2,
+                    borderpad: 6,
+                    font: {
+                        size: 13,
+                        color: '#d32f2f',
+                        family: 'Segoe UI, Arial, sans-serif',
+                        weight: 600
+                    }
+                });
+            }
+
+            const layout = {
+                autosize: true,
+                title: {
+                    text: '',
+                    font: { size: 16 }
+                },
+                annotations: annotations,
+                xaxis: {
+                    title: '',
+                    type: 'date',
+                    range: [defaultStart, defaultEnd],
+                    gridcolor: '#e9ecef',
+                    showgrid: true,
+                    fixedrange: false,
+                    showticklabels: true,
+                    rangeslider: {
+                        visible: true,
+                        bgcolor: '#f8f9fa',
+                        bordercolor: '#d5dde4',
+                        borderwidth: 1,
+                        thickness: 0.15,
+                        yaxis: {
+                            rangemode: 'match'
+                        }
+                    },
+                    rangeselector: {
+                        visible: !isMobile,
+                        buttons: [
+                            { count: 1, label: '24h', step: 'day', stepmode: 'backward' },
+                            { count: 3, label: '3d', step: 'day', stepmode: 'backward' },
+                            { count: 7, label: '7d', step: 'day', stepmode: 'backward' },
+                            { count: 1, label: '1m', step: 'month', stepmode: 'backward' },
+                            { step: 'all', label: 'All' }
+                        ],
+                        bgcolor: '#e3f2fd',
+                        activecolor: '#1976d2',
+                        x: 0,
+                        y: 1.15
+                    }
+                },
+                yaxis: {
+                    title: 'River Stage (feet)',
+                    zeroline: true,
+                    zerolinecolor: '#d5dde4',
+                    zerolinewidth: 2,
+                    gridcolor: '#e9ecef',
+                    range: [yMin, yMax],
+                    autorange: false,
+                    fixedrange: false
+                },
+                shapes: shapes,
+                hovermode: 'x unified',
+                showlegend: traces.length > 1,
+                legend: {
+                    x: 0.02,
+                    y: 0.98,
+                    xanchor: 'left',
+                    yanchor: 'top',
+                    bgcolor: 'rgba(255, 255, 255, 0.9)',
+                    bordercolor: '#d5dde4',
+                    borderwidth: 1
+                },
+                plot_bgcolor: '#ffffff',
+                paper_bgcolor: '#ffffff',
+                margin: isMobile
+                    ? { l: 50, r: 20, t: 20, b: 140 }
+                    : { l: 70, r: 30, t: 30, b: 150 }
+            };
+
+            const config = {
+                responsive: true,
+                displayModeBar: !isMobile,
+                displaylogo: false,
+                modeBarButtonsToRemove: ['lasso2d', 'select2d', 'autoScale2d']
+            };
+
+            Plotly.newPlot('riverChart', traces, layout, config);
+
+            // Handle zoom/pan to lazy-load historical data
+            const chartDiv = document.getElementById('riverChart');
+            chartDiv.on('plotly_relayout', async function(eventData) {
+                if (historicalDataLoaded || historicalDataLoading) return;
+
+                // The "All" range button fires autorange instead of an explicit range
+                const wantsAll = eventData['xaxis.autorange'] === true;
+
+                let viewStart = null, viewEnd = null;
+                if (eventData['xaxis.range[0]']) {
+                    viewStart = new Date(eventData['xaxis.range[0]']);
+                    viewEnd = eventData['xaxis.range[1]'] ? new Date(eventData['xaxis.range[1]']) : null;
+                } else if (eventData['xaxis.range']) {
+                    viewStart = new Date(eventData['xaxis.range'][0]);
+                    viewEnd = new Date(eventData['xaxis.range'][1]);
+                }
+
+                // Get the oldest data point currently loaded
+                const oldestCurrent = new Date(riverData.readings[0].timestamp);
+
+                // If user is viewing data older than what's loaded (with 30-day buffer)
+                const bufferMs = 30 * 24 * 60 * 60 * 1000; // 30 days
+                const wantsOlder = viewStart && viewStart.getTime() < (oldestCurrent.getTime() - bufferMs);
+
+                if (!wantsAll && !wantsOlder) return;
+
+                console.log('User viewing old data, loading historical data...');
+                const loaded = await loadHistoricalData();
+                if (loaded) {
+                    // Redraw chart with all data, keeping the view the user chose
+                    createChart();
+                    if (wantsAll) {
+                        Plotly.relayout('riverChart', { 'xaxis.autorange': true });
+                    } else if (viewStart && viewEnd) {
+                        Plotly.relayout('riverChart', { 'xaxis.range': [viewStart.getTime(), viewEnd.getTime()] });
+                    }
+                }
+            });
+
+            // Handle window resize
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    Plotly.Plots.resize('riverChart');
+                }, 250);
+            });
+        }
+
+        function autoRefresh() {
+            loadData();
+            setTimeout(autoRefresh, 15 * 60 * 1000);
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.nav-tabs a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                    // Update active state
+                    document.querySelectorAll('.nav-tabs a').forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        loadData();
+        setTimeout(autoRefresh, 15 * 60 * 1000);
+    </script>
+</body>
+</html>

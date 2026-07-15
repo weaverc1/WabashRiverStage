@@ -570,10 +570,14 @@
     <script>
         // Configuration
         const DATA_URL = 'data/river_data.json';
+        const HISTORICAL_DATA_URL = 'data/river_data_historical.json';
         const DEFAULT_DAYS = 7;
 
         // Global data store
         let riverData = null;
+        let historicalData = null;
+        let historicalDataLoaded = false;
+        let historicalDataLoading = false;
 
         // Fetch and display data
         async function loadData() {
@@ -599,6 +603,63 @@
             }
         }
 
+        // Lazy load historical data when needed
+        async function loadHistoricalData() {
+            if (historicalDataLoaded || historicalDataLoading) {
+                return historicalDataLoaded;
+            }
+
+            // Check if historical data exists
+            if (!riverData.has_historical_data) {
+                console.log('No historical data available');
+                return false;
+            }
+
+            historicalDataLoading = true;
+            console.log('Loading historical data...');
+
+            try {
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`${HISTORICAL_DATA_URL}?t=${cacheBuster}`, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache',
+                        'Pragma': 'no-cache'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                historicalData = await response.json();
+                historicalDataLoaded = true;
+                historicalDataLoading = false;
+                console.log(`Historical data loaded: ${historicalData.readings.length} readings`);
+                return true;
+            } catch (error) {
+                console.error('Error loading historical data:', error);
+                historicalDataLoading = false;
+                return false;
+            }
+        }
+
+        // Get combined readings (historical + recent)
+        function getCombinedReadings() {
+            if (!historicalDataLoaded || !historicalData) {
+                return riverData.readings;
+            }
+
+            // Decimate historical readings to hourly so the chart (and its
+            // rangeslider, which renders every trace a second time) stays
+            // responsive; recent readings keep full 15-minute resolution
+            const historicalHourly = historicalData.readings.filter((r, i) => i % 4 === 0);
+            const combined = [...historicalHourly, ...riverData.readings];
+            // Sort by timestamp (should already be sorted, but ensure it)
+            combined.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            return combined;
+        }
+
         function displayData() {
             if (!riverData || !riverData.readings || riverData.readings.length === 0) {
                 document.getElementById('riverChart').innerHTML =
@@ -611,9 +672,8 @@
         }
 
         function separateActualAndForecast() {
-            // Actual readings are in riverData.readings
-            // Forecast data is in riverData.forecast (separate array)
-            const actualReadings = riverData.readings || [];
+            // Get combined readings (includes historical if loaded)
+            const actualReadings = getCombinedReadings() || [];
             const forecastReadings = riverData.forecast || [];
 
             return { actualReadings, forecastReadings };
@@ -743,9 +803,15 @@
             const defaultStart = new Date(now.getTime() - (actualDays * 24 * 60 * 60 * 1000));
             const defaultEnd = new Date(now.getTime() + (forecastDays * 24 * 60 * 60 * 1000));
 
-            // Calculate Y-axis range
-            const allStages = [...actualReadings, ...forecastReadings].map(r => r.riverstage);
-            const maxStageInData = Math.max(...allStages);
+            // Calculate Y-axis range (loop instead of spread: Math.max(...arr)
+            // overflows the call stack once historical data is merged in)
+            let maxStageInData = -Infinity;
+            for (const r of actualReadings) {
+                if (r.riverstage > maxStageInData) maxStageInData = r.riverstage;
+            }
+            for (const r of forecastReadings) {
+                if (r.riverstage > maxStageInData) maxStageInData = r.riverstage;
+            }
             const yMin = 0;
             const yMax = Math.max(maxStageInData * 1.15, riverData.flood_stages.major + 5);
 
@@ -992,6 +1058,50 @@
             };
 
             Plotly.newPlot('riverChart', traces, layout, config);
+
+            // Handle zoom/pan to lazy-load historical data
+            const chartDiv = document.getElementById('riverChart');
+            chartDiv.on('plotly_relayout', async function(eventData) {
+                if (historicalDataLoaded || historicalDataLoading) return;
+
+                // The "All" range button fires autorange instead of an explicit range
+                const wantsAll = eventData['xaxis.autorange'] === true;
+
+                let viewStart = null, viewEnd = null;
+                if (eventData['xaxis.range[0]']) {
+                    viewStart = new Date(eventData['xaxis.range[0]']);
+                    viewEnd = eventData['xaxis.range[1]'] ? new Date(eventData['xaxis.range[1]']) : null;
+                } else if (eventData['xaxis.range']) {
+                    viewStart = new Date(eventData['xaxis.range'][0]);
+                    viewEnd = new Date(eventData['xaxis.range'][1]);
+                }
+
+                // Get the oldest data point currently loaded
+                const oldestCurrent = new Date(riverData.readings[0].timestamp);
+
+                // If user is viewing data older than what's loaded (with 30-day buffer)
+                const bufferMs = 30 * 24 * 60 * 60 * 1000; // 30 days
+                const wantsOlder = viewStart && viewStart.getTime() < (oldestCurrent.getTime() - bufferMs);
+
+                if (!wantsAll && !wantsOlder) return;
+
+                console.log('User viewing old data, loading historical data...');
+                const loaded = await loadHistoricalData();
+                if (loaded) {
+                    // Show feedback, then redraw on the next tick so the message
+                    // paints before the heavy re-render blocks the main thread
+                    chartDiv.innerHTML = '<div class="loading">Loading full history&hellip;</div>';
+                    setTimeout(function() {
+                        // Redraw chart with all data, keeping the view the user chose
+                        createChart();
+                        if (wantsAll) {
+                            Plotly.relayout('riverChart', { 'xaxis.autorange': true });
+                        } else if (viewStart && viewEnd) {
+                            Plotly.relayout('riverChart', { 'xaxis.range': [viewStart.getTime(), viewEnd.getTime()] });
+                        }
+                    }, 50);
+                }
+            });
 
             // Handle window resize
             let resizeTimeout;

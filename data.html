@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wabash River at Hutsonville - Data Table</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e8eef2;
+            min-height: 100vh;
+        }
+
+        .header-bar {
+            background: linear-gradient(135deg, #1e5a8e 0%, #2471a3 100%);
+            color: white;
+            padding: 20px 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .header-bar .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-bar h1 {
+            font-size: 1.8em;
+            font-weight: 400;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        .header-bar .subtitle {
+            font-size: 0.95em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .nav-tabs {
+            background: #ffffff;
+            border-bottom: 2px solid #d5dde4;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .nav-tabs .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 5px;
+            padding: 0 20px;
+        }
+
+        .nav-tabs a {
+            padding: 12px 24px;
+            color: #2471a3;
+            text-decoration: none;
+            font-size: 0.95em;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-tabs a:hover {
+            background: #f0f4f7;
+            border-bottom-color: #2471a3;
+        }
+
+        .nav-tabs a.active {
+            color: #1e5a8e;
+            border-bottom-color: #1e5a8e;
+            background: #f8fafb;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .status-banner {
+            background: linear-gradient(to right, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px 30px;
+            border-bottom: 3px solid #d5dde4;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .status-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            border-left: 4px solid #2471a3;
+        }
+
+        .status-item .label {
+            font-size: 0.8em;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .status-item .value {
+            font-size: 1.6em;
+            font-weight: 400;
+            color: #1e5a8e;
+            line-height: 1.2;
+        }
+
+        .status-item .subtext {
+            font-size: 0.85em;
+            color: #495057;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        .table-section {
+            padding: 30px;
+            background: #fafbfc;
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            color: #1e5a8e;
+            margin-bottom: 20px;
+            font-weight: 400;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #d5dde4;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+            margin-bottom: 18px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .control-group label {
+            font-size: 0.75em;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .controls input[type="date"],
+        .controls select {
+            padding: 8px 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9em;
+            color: #2c3e50;
+            background: white;
+        }
+
+        .btn {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background: #2471a3;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e5a8e;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #2471a3;
+            border: 1px solid #2471a3;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f4f7;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .load-status {
+            font-size: 0.85em;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92em;
+        }
+
+        thead th {
+            background: #1e5a8e;
+            color: white;
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+        }
+
+        thead th:hover {
+            background: #2471a3;
+        }
+
+        thead th .arrow {
+            font-size: 0.8em;
+            margin-left: 6px;
+            opacity: 0.85;
+        }
+
+        tbody td {
+            padding: 9px 16px;
+            border-bottom: 1px solid #e9ecef;
+            color: #2c3e50;
+            white-space: nowrap;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f8fafb;
+        }
+
+        tbody tr:hover {
+            background: #eef4f8;
+        }
+
+        td.stage {
+            font-variant-numeric: tabular-nums;
+            font-weight: 500;
+        }
+
+        td.stage.action  { color: #b26a00; }
+        td.stage.minor   { color: #e65100; }
+        td.stage.moderate{ color: #d84315; }
+        td.stage.major   { color: #c62828; font-weight: 700; }
+
+        .flood-tag {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
+        .flood-tag.action   { background: #fff3cd; color: #856404; }
+        .flood-tag.minor    { background: #ffe0b2; color: #a04d00; }
+        .flood-tag.moderate { background: #ffccbc; color: #bf360c; }
+        .flood-tag.major    { background: #ffcdd2; color: #b71c1c; }
+
+        .pagination {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 0 4px;
+            font-size: 0.9em;
+            color: #495057;
+        }
+
+        .pagination .page-info {
+            margin: 0 10px;
+            font-weight: 500;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        .error {
+            text-align: center;
+            padding: 80px 20px;
+            color: #f44336;
+            font-size: 1.1em;
+        }
+
+        footer {
+            padding: 25px 30px;
+            text-align: center;
+            background: white;
+            color: #6c757d;
+            font-size: 0.9em;
+            border-top: 1px solid #e9ecef;
+        }
+
+        footer a {
+            color: #2471a3;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header-bar {
+                padding: 15px 20px;
+            }
+
+            .header-bar h1 {
+                font-size: 1.3em;
+            }
+
+            .nav-tabs .nav-content {
+                flex-wrap: wrap;
+                padding: 0 10px;
+            }
+
+            .nav-tabs a {
+                padding: 10px 15px;
+                font-size: 0.85em;
+            }
+
+            .table-section {
+                padding: 20px 12px;
+            }
+
+            .status-banner {
+                padding: 20px 15px;
+            }
+
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            thead th, tbody td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <div class="header-content">
+            <h1>Wabash River at Hutsonville</h1>
+            <p class="subtitle">Complete River Stage Data Table</p>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <div class="nav-content">
+            <a href="index.html">Overview</a>
+            <a href="index.html#data">Data &amp; Graph</a>
+            <a href="index.html#impacts">Flood Stages</a>
+            <a href="data.html" class="active">Data Table</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="status-banner">
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="label">Total Readings</div>
+                    <div class="value" id="statCount">--</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Period of Record</div>
+                    <div class="value" id="statRange" style="font-size: 1.05em; padding-top: 6px;">--</div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Latest Reading</div>
+                    <div class="value" id="statLatest">--</div>
+                    <div class="subtext" id="statLatestTime"></div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Highest on Record</div>
+                    <div class="value" id="statMax">--</div>
+                    <div class="subtext" id="statMaxTime"></div>
+                </div>
+                <div class="status-item">
+                    <div class="label">Lowest on Record</div>
+                    <div class="value" id="statMin">--</div>
+                    <div class="subtext" id="statMinTime"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-section">
+            <h2 class="section-title">All Recorded Readings</h2>
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="dateFrom">From</label>
+                    <input type="date" id="dateFrom">
+                </div>
+                <div class="control-group">
+                    <label for="dateTo">To</label>
+                    <input type="date" id="dateTo">
+                </div>
+                <button class="btn btn-secondary" id="clearFilter">Clear Filter</button>
+                <div class="control-group">
+                    <label for="pageSize">Rows per page</label>
+                    <select id="pageSize">
+                        <option value="50">50</option>
+                        <option value="100" selected>100</option>
+                        <option value="250">250</option>
+                        <option value="500">500</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" id="downloadCsv" disabled>Download CSV</button>
+            </div>
+
+            <p class="load-status" id="loadStatus">Loading recent data&hellip;</p>
+
+            <div class="table-wrapper">
+                <table id="dataTable" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th id="thTime">Date / Time <span class="arrow" id="arrowTime">&#9660;</span></th>
+                            <th id="thStage">River Stage (ft) <span class="arrow" id="arrowStage"></span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+                <div class="loading" id="tableLoading">Loading data&hellip;</div>
+            </div>
+
+            <div class="pagination" id="pagination" style="display:none;">
+                <button class="btn btn-secondary" id="pgFirst">&laquo; First</button>
+                <button class="btn btn-secondary" id="pgPrev">&lsaquo; Prev</button>
+                <span class="page-info" id="pageInfo"></span>
+                <button class="btn btn-secondary" id="pgNext">Next &rsaquo;</button>
+                <button class="btn btn-secondary" id="pgLast">Last &raquo;</button>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Data Updates:</strong> Automatic updates every 15 minutes &mdash; readings recorded every 15 minutes since October 2021</p>
+            <p style="margin-top: 10px;"><a href="index.html">&larr; Back to River Stage Monitor</a></p>
+        </footer>
+    </div>
+
+    <script>
+        const RECENT_URL = 'data/river_data.json';
+        const HISTORICAL_URL = 'data/river_data_historical.json';
+        const FLOOD_STAGES = [
+            { min: 28, cls: 'major',    tag: 'Major Flood' },
+            { min: 24, cls: 'moderate', tag: 'Moderate Flood' },
+            { min: 16, cls: 'minor',    tag: 'Flood' },
+            { min: 12, cls: 'action',   tag: 'Action Stage' }
+        ];
+
+        let allReadings = [];        // merged, ascending by timestamp
+        let filtered = [];           // current filter + sort applied
+        let sortKey = 'timestamp';
+        let sortDesc = true;         // newest first by default
+        let page = 1;
+
+        const $ = id => document.getElementById(id);
+
+        async function fetchJson(url) {
+            const response = await fetch(url + '?t=' + Date.now(), { cache: 'no-store' });
+            if (!response.ok) throw new Error('HTTP ' + response.status + ' for ' + url);
+            return response.json();
+        }
+
+        function floodClass(stage) {
+            for (const f of FLOOD_STAGES) {
+                if (stage >= f.min) return f;
+            }
+            return null;
+        }
+
+        function displayTime(r) {
+            return r.date_display || r.timestamp.replace('T', ' ').slice(0, 19);
+        }
+
+        function updateStats() {
+            if (allReadings.length === 0) return;
+            const first = allReadings[0];
+            const last = allReadings[allReadings.length - 1];
+            let max = first, min = first;
+            for (const r of allReadings) {
+                if (r.riverstage > max.riverstage) max = r;
+                if (r.riverstage < min.riverstage) min = r;
+            }
+            $('statCount').textContent = allReadings.length.toLocaleString();
+            $('statRange').textContent =
+                first.timestamp.slice(0, 10) + ' → ' + last.timestamp.slice(0, 10);
+            $('statLatest').textContent = last.riverstage.toFixed(2) + ' ft';
+            $('statLatestTime').textContent = displayTime(last);
+            $('statMax').textContent = max.riverstage.toFixed(2) + ' ft';
+            $('statMaxTime').textContent = max.timestamp.slice(0, 10);
+            $('statMin').textContent = min.riverstage.toFixed(2) + ' ft';
+            $('statMinTime').textContent = min.timestamp.slice(0, 10);
+        }
+
+        function applyFilterAndSort() {
+            const from = $('dateFrom').value;   // yyyy-mm-dd
+            const to = $('dateTo').value;
+            filtered = allReadings.filter(r => {
+                const d = r.timestamp.slice(0, 10);
+                if (from && d < from) return false;
+                if (to && d > to) return false;
+                return true;
+            });
+            filtered.sort((a, b) => {
+                let cmp;
+                if (sortKey === 'timestamp') {
+                    cmp = a.timestamp < b.timestamp ? -1 : a.timestamp > b.timestamp ? 1 : 0;
+                } else {
+                    cmp = a.riverstage - b.riverstage;
+                }
+                return sortDesc ? -cmp : cmp;
+            });
+            page = 1;
+            renderTable();
+        }
+
+        function renderTable() {
+            const pageSize = parseInt($('pageSize').value, 10);
+            const pages = Math.max(1, Math.ceil(filtered.length / pageSize));
+            page = Math.min(Math.max(1, page), pages);
+            const start = (page - 1) * pageSize;
+            const rows = filtered.slice(start, start + pageSize);
+
+            const html = rows.map(r => {
+                const f = floodClass(r.riverstage);
+                const cls = f ? ' ' + f.cls : '';
+                const tag = f ? '<span class="flood-tag ' + f.cls + '">' + f.tag + '</span>' : '';
+                return '<tr><td>' + displayTime(r) + '</td>' +
+                       '<td class="stage' + cls + '">' + r.riverstage.toFixed(2) + tag + '</td></tr>';
+            }).join('');
+            $('tableBody').innerHTML = html ||
+                '<tr><td colspan="2" style="text-align:center;color:#6c757d;">No readings in the selected range</td></tr>';
+
+            $('tableLoading').style.display = 'none';
+            $('dataTable').style.display = '';
+            $('pagination').style.display = '';
+            $('pageInfo').textContent = 'Page ' + page.toLocaleString() + ' of ' + pages.toLocaleString() +
+                ' — ' + filtered.length.toLocaleString() + ' readings';
+            $('pgFirst').disabled = $('pgPrev').disabled = (page <= 1);
+            $('pgNext').disabled = $('pgLast').disabled = (page >= pages);
+
+            $('arrowTime').innerHTML = sortKey === 'timestamp' ? (sortDesc ? '&#9660;' : '&#9650;') : '';
+            $('arrowStage').innerHTML = sortKey === 'riverstage' ? (sortDesc ? '&#9660;' : '&#9650;') : '';
+
+            $('downloadCsv').disabled = filtered.length === 0;
+            $('downloadCsv').textContent = 'Download CSV (' + filtered.length.toLocaleString() + ' rows)';
+        }
+
+        function downloadCsv() {
+            // Export the current filtered set, always oldest-first
+            const rows = [...filtered].sort((a, b) =>
+                a.timestamp < b.timestamp ? -1 : a.timestamp > b.timestamp ? 1 : 0);
+            const lines = ['timestamp,riverstage_ft'];
+            for (const r of rows) {
+                lines.push(r.timestamp + ',' + r.riverstage);
+            }
+            const blob = new Blob([lines.join('\n') + '\n'], { type: 'text/csv' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            const from = rows.length ? rows[0].timestamp.slice(0, 10) : 'empty';
+            const to = rows.length ? rows[rows.length - 1].timestamp.slice(0, 10) : 'empty';
+            a.download = 'wabash_hutsonville_river_stage_' + from + '_to_' + to + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+        }
+
+        function mergeReadings(older, newer) {
+            // Both ascending; historical ends before recent begins, but dedupe defensively
+            const seen = new Set(newer.map(r => r.timestamp));
+            const merged = older.filter(r => !seen.has(r.timestamp)).concat(newer);
+            merged.sort((a, b) => a.timestamp < b.timestamp ? -1 : a.timestamp > b.timestamp ? 1 : 0);
+            return merged;
+        }
+
+        async function init() {
+            try {
+                const recent = await fetchJson(RECENT_URL);
+                allReadings = [...recent.readings].sort((a, b) =>
+                    a.timestamp < b.timestamp ? -1 : a.timestamp > b.timestamp ? 1 : 0);
+                updateStats();
+                applyFilterAndSort();
+                $('loadStatus').textContent = 'Showing ' + allReadings.length.toLocaleString() +
+                    ' recent readings — loading full history (2021–present)…';
+            } catch (err) {
+                console.error(err);
+                $('tableLoading').className = 'error';
+                $('tableLoading').textContent = 'Unable to load river data: ' + err.message;
+                return;
+            }
+
+            try {
+                const hist = await fetchJson(HISTORICAL_URL);
+                allReadings = mergeReadings(hist.readings, allReadings);
+                updateStats();
+                applyFilterAndSort();
+                $('loadStatus').textContent = 'Complete record loaded: ' +
+                    allReadings.length.toLocaleString() + ' readings.';
+            } catch (err) {
+                console.error('Historical data unavailable:', err);
+                $('loadStatus').textContent = 'Showing ' + allReadings.length.toLocaleString() +
+                    ' recent readings (full history unavailable: ' + err.message + ')';
+            }
+        }
+
+        $('thTime').addEventListener('click', () => {
+            if (sortKey === 'timestamp') { sortDesc = !sortDesc; } else { sortKey = 'timestamp'; sortDesc = true; }
+            applyFilterAndSort();
+        });
+        $('thStage').addEventListener('click', () => {
+            if (sortKey === 'riverstage') { sortDesc = !sortDesc; } else { sortKey = 'riverstage'; sortDesc = true; }
+            applyFilterAndSort();
+        });
+        $('dateFrom').addEventListener('change', applyFilterAndSort);
+        $('dateTo').addEventListener('change', applyFilterAndSort);
+        $('clearFilter').addEventListener('click', () => {
+            $('dateFrom').value = '';
+            $('dateTo').value = '';
+            applyFilterAndSort();
+        });
+        $('pageSize').addEventListener('change', () => { page = 1; renderTable(); });
+        $('pgFirst').addEventListener('click', () => { page = 1; renderTable(); });
+        $('pgPrev').addEventListener('click', () => { page--; renderTable(); });
+        $('pgNext').addEventListener('click', () => { page++; renderTable(); });
+        $('pgLast').addEventListener('click', () => { page = Infinity; renderTable(); });
+        $('downloadCsv').addEventListener('click', downloadCsv);
+
+        init();
+    </script>
+</body>
+</html>

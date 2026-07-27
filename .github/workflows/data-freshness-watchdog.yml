@@ -5,8 +5,13 @@ name: Data Freshness Watchdog
 # ("[weaverc1/WabashRiverStage] Run failed: Data Freshness Watchdog ...").
 
 on:
-  schedule:
-    - cron: '17 * * * *'   # hourly at :17
+  # DISABLED 2026-07-27: Storm3 datalogger at the Hutsonville site failed
+  # (dead, no power) on 2026-07-26 ~21:00. Data is expected to stay stale
+  # until the site is visited and the sensors are rewired, so the hourly
+  # schedule was only generating failure emails. Re-enable by uncommenting
+  # the two lines below once data is flowing again.
+  # schedule:
+  #   - cron: '17 * * * *'   # hourly at :17
   workflow_dispatch:
 
 jobs:
